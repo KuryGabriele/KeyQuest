@@ -7,17 +7,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.kuricki.keyquest.data.LoginUiState
-import com.kuricki.keyquest.ui.LoginViewModel
+import com.kuricki.keyquest.ui.views.LevelSelectScreen
 import com.kuricki.keyquest.ui.views.LoginScreen
 
 
@@ -44,6 +39,11 @@ fun KeyQuestApp(
         ){
             composable(route = KeyQuestScreens.Login.name) {
                 LoginScreen(
+                    modifier = Modifier.fillMaxHeight()
+                )
+            }
+            composable(route = KeyQuestScreens.LevelSelect.name) {
+                LevelSelectScreen(
                     modifier = Modifier.fillMaxHeight()
                 )
             }
