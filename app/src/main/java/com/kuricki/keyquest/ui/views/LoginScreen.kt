@@ -2,8 +2,10 @@ package com.kuricki.keyquest.ui.views
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -30,19 +32,20 @@ fun LoginScreen(
     val loginUiState by loginViewModel.uiState.collectAsState()
     Column(
         modifier = Modifier,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.SpaceAround
     ) {
         Text(
             text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.displayLarge,
             modifier = modifier
                 .align(Alignment.CenterHorizontally)
+                .padding(32.dp)
         )
         Spacer(modifier = Modifier.height(32.dp))
         Column (
             modifier = Modifier
                 .align(Alignment.CenterHorizontally),
-            verticalArrangement = Arrangement.SpaceAround
+            verticalArrangement = Arrangement.Bottom
         ) {
             TextField(
                 value = loginUiState.usrName,
@@ -58,37 +61,23 @@ fun LoginScreen(
                 visualTransformation = PasswordVisualTransformation(),
                 singleLine = true
             )
-            Spacer(modifier = Modifier.height(32.dp))
-            Button(
-                modifier = modifier
-                    .width(100.dp)
-                    .height(50.dp)
-                    .align(Alignment.CenterHorizontally),
-                onClick = { onLoginSuccess() }) {
-                Text(
-                    stringResource(R.string.login),
-                    style = MaterialTheme.typography.bodyLarge
-                    )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(R.string.or),
-                style = MaterialTheme.typography.labelLarge,
+            Spacer(modifier = Modifier.height(64.dp))
+            Row(
                 modifier = modifier
                     .align(Alignment.CenterHorizontally)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                modifier = modifier
-                    .width(120.dp)
-                    .height(50.dp)
-                    .align(Alignment.CenterHorizontally),
-                onClick = { /*TODO*/ }) {
-                Text(
-                    stringResource(R.string.register),
-                    style = MaterialTheme.typography.bodyLarge
-                )
+            ){
+                Button(
+                    modifier = modifier
+                        .width(150.dp)
+                        .height(50.dp),
+                    onClick = { onLoginSuccess() }) {
+                    Text(
+                        stringResource(R.string.login),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
+
         }
     }
 }
