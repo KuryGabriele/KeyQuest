@@ -39,6 +39,9 @@ fun KeyQuestApp(
         ){
             composable(route = KeyQuestScreens.Login.name) {
                 LoginScreen(
+                    onLoginSuccess = {
+                        navController.navigate(KeyQuestScreens.LevelSelect.name)
+                    },
                     modifier = Modifier.fillMaxHeight()
                 )
             }

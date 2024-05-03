@@ -23,6 +23,7 @@ import com.kuricki.keyquest.data.LoginViewModel
 
 @Composable
 fun LoginScreen(
+    onLoginSuccess: () -> Unit = {},
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = viewModel()
 ){
@@ -63,7 +64,7 @@ fun LoginScreen(
                     .width(100.dp)
                     .height(50.dp)
                     .align(Alignment.CenterHorizontally),
-                onClick = { /*TODO*/ }) {
+                onClick = { onLoginSuccess() }) {
                 Text(
                     stringResource(R.string.login),
                     style = MaterialTheme.typography.bodyLarge
