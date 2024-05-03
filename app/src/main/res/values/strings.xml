@@ -5,4 +5,5 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="or">Or</string>
+    <string name="greeting">Hello</string>
 </resources>
