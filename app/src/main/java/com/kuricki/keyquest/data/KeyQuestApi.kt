@@ -15,7 +15,7 @@ data class LoginSession (
     @JsonProperty("usrName") val userName: String,
 )
 
-data class Level (
+data class GameLevel (
     @JsonProperty("id") var id: Int,
     @JsonProperty("displayName") var displayName: String,
     @JsonProperty("difficulty") var difficulty: Int,
@@ -58,7 +58,7 @@ object KeyQuestApi {
 
 interface levels {
     @GET("levels") //Get available levels from api
-    fun getLevels(): Call<MutableList<Level>>
+    fun getLevels(): Call<MutableList<GameLevel>>
 
 }
 

@@ -18,7 +18,7 @@ class LevelSelectViewModel: ViewModel() {
         }
     }
 
-    fun setLevels(newLevels: MutableList<Level>){
+    fun setLevels(newLevels: MutableList<GameLevel>){
         _uiState.update{ currentState ->
             currentState.copy(
                 levels = newLevels
