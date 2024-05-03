@@ -23,8 +23,8 @@ import com.kuricki.keyquest.data.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    onLoginSuccess: () -> Unit = {},
     modifier: Modifier = Modifier,
+    onLoginSuccess: () -> Unit = {},
     loginViewModel: LoginViewModel = viewModel()
 ){
     val loginUiState by loginViewModel.uiState.collectAsState()
