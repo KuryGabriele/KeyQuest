@@ -6,4 +6,5 @@
     <string name="register">Register</string>
     <string name="or">Or</string>
     <string name="greeting">Hello</string>
+    <string name="highScore">High score:</string>
 </resources>
