@@ -1,7 +1,6 @@
-package com.kuricki.keyquest.ui
+package com.kuricki.keyquest.data
 
 import androidx.lifecycle.ViewModel
-import com.kuricki.keyquest.data.LoginUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,5 +24,9 @@ class LoginViewModel: ViewModel() {
                 psw = password
             )
         }
+    }
+
+    fun loginUser() {
+
     }
 }
