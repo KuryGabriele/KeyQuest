@@ -16,18 +16,19 @@ data class LoginSession (
 )
 
 data class Level (
-    @JsonProperty("id") val id: Int,
-    @JsonProperty("displayName") val displayName: String,
-    @JsonProperty("difficulty") val userName: Int,
-    @JsonProperty("currentScore") val currentScore: Int,
-    @JsonProperty("bestScore") val bestScore: String,
+    @JsonProperty("id") var id: Int,
+    @JsonProperty("displayName") var displayName: String,
+    @JsonProperty("difficulty") var difficulty: Int,
+    @JsonProperty("currentScore") var currentScore: Int,
+    @JsonProperty("bestScore") var bestScore: Int,
 )
 
 object KeyQuestApi {
     private const val BASE_URL = "keyquest.kuricki.com"
-    private var token:String = "undefined"
+    private var token:String = "undefined" //api auth token
 
     object RequestInterceptor : Interceptor {
+        //intercepts all requests, useful to add headers to all requests
         override fun intercept(chain: Interceptor.Chain): Response {
             //add auth token to all requests
             val request = chain.request().newBuilder()
@@ -37,10 +38,12 @@ object KeyQuestApi {
     }
 
     private val okHttpClient = OkHttpClient()
+        //Used to add interceptor
         .newBuilder()
         .addInterceptor(RequestInterceptor)
         .build()
 
+    //retrofit client
     fun getClient():Retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
@@ -53,10 +56,13 @@ object KeyQuestApi {
     }
 }
 
-interface LevelsApi {
-    @GET("levels")
-    fun getLevels(): Call<List<Level>>
+interface levels {
+    @GET("levels") //Get available levels from api
+    fun getLevels(): Call<MutableList<Level>>
 
-    @GET("login")
+}
+
+interface authentication {
+    @GET("login") //Login user
     fun login(): Call<LoginSession>
 }
