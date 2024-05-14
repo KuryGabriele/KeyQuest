@@ -92,24 +92,28 @@ fun LevelCard(
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
-                if(lvl.difficulty == 0) {
-                    Text(
-                        text = stringResource(R.string.easy),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = Color.Green,
-                    )
-                } else if(lvl.difficulty == 1) {
-                    Text(
-                        text = stringResource(R.string.medium),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = Color.Yellow,
-                    )
-                } else {
-                    Text(
-                        text = stringResource(R.string.hard),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = Color.Red,
-                    )
+                when (lvl.difficulty) {
+                    0 -> {
+                        Text(
+                            text = stringResource(R.string.easy),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = Color.Green,
+                        )
+                    }
+                    1 -> {
+                        Text(
+                            text = stringResource(R.string.medium),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = Color.Yellow,
+                        )
+                    }
+                    else -> {
+                        Text(
+                            text = stringResource(R.string.hard),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = Color.Red,
+                        )
+                    }
                 }
             }
         }
