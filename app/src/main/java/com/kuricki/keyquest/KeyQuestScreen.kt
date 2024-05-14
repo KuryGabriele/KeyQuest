@@ -1,5 +1,7 @@
 package com.kuricki.keyquest
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,6 +30,7 @@ enum class KeyQuestScreens() {
 fun KeyQuestApp(
     navController: NavHostController = rememberNavController()
 ) {
+    val context = LocalContext.current
     Scaffold(){
         innerPadding ->
         NavHost(
@@ -38,6 +42,7 @@ fun KeyQuestApp(
                 .padding(innerPadding)
         ){
             composable(route = KeyQuestScreens.Login.name) {
+                (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 LoginScreen(
                     onLoginSuccess = {
                         navController.navigate(KeyQuestScreens.LevelSelect.name)
@@ -46,6 +51,13 @@ fun KeyQuestApp(
                 )
             }
             composable(route = KeyQuestScreens.LevelSelect.name) {
+                (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                LevelSelectScreen(
+                    modifier = Modifier.fillMaxHeight()
+                )
+            }
+            composable(route = KeyQuestScreens.Game.name) {
+                (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
                 LevelSelectScreen(
                     modifier = Modifier.fillMaxHeight()
                 )
