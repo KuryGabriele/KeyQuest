@@ -7,4 +7,7 @@
     <string name="or">Or</string>
     <string name="greeting">Hello</string>
     <string name="highScore">High score:</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
 </resources>
