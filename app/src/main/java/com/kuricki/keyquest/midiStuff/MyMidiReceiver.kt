@@ -10,14 +10,24 @@ class MyMidiReceiver:MidiReceiver() {
         val receivedData = data.copyOfRange(offset, offset + count)
         //check if receivedData[1] is not null
         //println("MIDI Data Received: ${receivedData.joinToString(", ")}")
-        if(receivedData[0].toInt() == -112 && receivedData.size > 1 && receivedData[2] >= 0) {
-            val note = MidiToNote(receivedData[1].toInt())
-            if(receivedData[2] > 0) {
-                keysPressedCurrently.add(note)
-            } else {
-                keysPressedCurrently.remove(note)
+
+        //Multiple key could be pressed at the same time
+        var i = 0;
+        while(i < receivedData.size) {
+            //check if midi signal is key pressed
+            if(receivedData[i].toInt() == -112) {
+                if(receivedData[i+2].toInt() == 0) {
+                    //if key is released, remove it from keysPressedCurrently
+                    keysPressedCurrently.remove(MidiToNote(receivedData[i+1].toInt()))
+                } else if (receivedData[i+2].toInt() > 0) {
+                    //if key is pressed, add it to keysPressedCurrently
+                    keysPressedCurrently.add(MidiToNote(receivedData[i+1].toInt()))
+                }
             }
-            println("Keys Pressed: $keysPressedCurrently")
+
+            i += 3
         }
+
+        println("Keys Pressed: $keysPressedCurrently")
     }
 }
