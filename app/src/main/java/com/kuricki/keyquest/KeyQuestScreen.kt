@@ -2,6 +2,8 @@ package com.kuricki.keyquest
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,6 +28,7 @@ enum class KeyQuestScreens() {
     Summary()
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun KeyQuestApp(
     navController: NavHostController = rememberNavController()
@@ -53,7 +56,11 @@ fun KeyQuestApp(
             composable(route = KeyQuestScreens.LevelSelect.name) {
                 (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 LevelSelectScreen(
-                    modifier = Modifier.fillMaxHeight()
+                    modifier = Modifier.fillMaxHeight(),
+                    onLevelSelected = { level: Int ->
+                        println("Level selected: $level")
+                        navController.navigate(KeyQuestScreens.Game.name)
+                    }
                 )
             }
             composable(route = KeyQuestScreens.Game.name) {

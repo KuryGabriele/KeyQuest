@@ -29,6 +29,7 @@ import com.kuricki.keyquest.data.LevelSelectViewModel
 @Composable
 fun LevelSelectScreen(
     modifier: Modifier = Modifier,
+    onLevelSelected: (Int) -> Unit = {},
     levelSelectViewModel: LevelSelectViewModel = viewModel()
 ) {
     val lsUiState by levelSelectViewModel.uiState.collectAsState()
@@ -50,7 +51,7 @@ fun LevelSelectScreen(
             verticalArrangement = Arrangement.Center,
         ) {
             lsUiState.levels.forEach { lvl ->
-                LevelCard(modifier, levelSelectViewModel, lvl)
+                LevelCard(modifier, onLevelSelected, levelSelectViewModel, lvl)
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
@@ -60,6 +61,7 @@ fun LevelSelectScreen(
 @Composable
 fun LevelCard(
     modifier: Modifier,
+    onLevelSelected: (Int) -> Unit = {},
     levelSelectViewModel: LevelSelectViewModel = viewModel(),
     lvl: GameLevel
 ) {
@@ -69,7 +71,7 @@ fun LevelCard(
         ),
         modifier = modifier
             .width(350.dp)
-            .clickable { }
+            .clickable { onLevelSelected(lvl.id) }
     ) {
         Column(
             modifier = Modifier,
