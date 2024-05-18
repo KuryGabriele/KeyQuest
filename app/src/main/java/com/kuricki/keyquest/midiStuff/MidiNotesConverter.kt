@@ -23,7 +23,9 @@ fun MidiToNote(midi: Int): String {
 }
 
 fun NoteToMidi(note: String): Int {
-    return when (note) {
+    val octave = note[note.length - 1].toString().toInt()
+    val note = note.substring(0, note.length - 1)
+    var code =  when (note) {
         "C" -> 0
         "C#" -> 1
         "D" -> 2
@@ -38,4 +40,6 @@ fun NoteToMidi(note: String): Int {
         "B" -> 11
         else -> -1
     }
+
+    return code + 12 * (octave + 1)
 }
