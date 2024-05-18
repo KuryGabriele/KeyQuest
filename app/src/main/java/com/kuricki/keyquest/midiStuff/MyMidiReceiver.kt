@@ -7,6 +7,10 @@ class MyMidiReceiver:MidiReceiver() {
         // Process the received MIDI data
         // For example, print the MIDI data to the log
         val receivedData = data.copyOfRange(offset, offset + count)
-        println("MIDI Data Received: ${receivedData.joinToString(", ")}")
+        //check if receivedData[1] is not null
+        if(receivedData.size > 1 && receivedData[2] > 0) {
+            val note = MidiToNote(receivedData[1].toInt())
+            println("MIDI Data Received: $note")
+        }
     }
 }
