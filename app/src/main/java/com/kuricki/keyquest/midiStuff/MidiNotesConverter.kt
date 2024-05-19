@@ -1,9 +1,12 @@
 package com.kuricki.keyquest.midiStuff
 
+/**
+ * Converts a midi note to a note name
+ */
 fun MidiToNote(midi: Int): String {
     val note = midi % 12
     val octave = midi / 12 - 1
-    var noteName = when (note) {
+    val noteName = when (note) {
         0 -> "C"
         1 -> "C#"
         2 -> "D"
@@ -22,10 +25,13 @@ fun MidiToNote(midi: Int): String {
     return "$noteName$octave"
 }
 
+/**
+ * Converts a note name to a midi note
+ */
 fun NoteToMidi(note: String): Int {
-    val octave = note[note.length - 1].toString().toInt()
-    val note = note.substring(0, note.length - 1)
-    var code =  when (note) {
+    val octave = note[note.length - 1].toString().toInt() //Extract octave
+    val n = note.substring(0, note.length - 1) // Extract note without octave
+    val code =  when (n) {
         "C" -> 0
         "C#" -> 1
         "D" -> 2
@@ -41,5 +47,6 @@ fun NoteToMidi(note: String): Int {
         else -> -1
     }
 
+    //return Midi encoded note
     return code + 12 * (octave + 1)
 }
