@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kuricki.keyquest.data.GameScreenViewModel
+import com.kuricki.keyquest.ui.components.PianoRoll
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -37,5 +38,6 @@ fun GameScreen(
                 .align(Alignment.CenterHorizontally)
                 .padding(16.dp)
         )
+        PianoRoll(startNote = "C3", endNote = "C4", pressedNotes = gUiState.currPressedKeys, highlightedNotes = mutableSetOf())
     }
 }
