@@ -24,25 +24,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         midiManager = getSystemService(Context.MIDI_SERVICE) as MidiManager
-        // get all midi devices
-        midiDevices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM)
-
-        // open the first device
-        val device = midiDevices.last()
-        println("Device name: $device")
-        val listener = MidiManager.OnDeviceOpenedListener {
-            println("Device opened")
-            openedDevice = it
-            openedPort = openedDevice.openOutputPort(0)
-            mr = MyMidiReceiver()
-            openedPort.connect(mr)
-        }
-
-        midiManager.openDevice(device, listener, null)
 
         setContent {
             KeyQuestTheme {
-                KeyQuestApp()
+                KeyQuestApp(midiManager)
             }
         }
     }
