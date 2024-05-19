@@ -2,6 +2,7 @@ package com.kuricki.keyquest
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.media.midi.MidiManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.kuricki.keyquest.ui.views.GameScreen
 import com.kuricki.keyquest.ui.views.LevelSelectScreen
 import com.kuricki.keyquest.ui.views.LoginScreen
 
@@ -31,6 +33,7 @@ enum class KeyQuestScreens() {
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun KeyQuestApp(
+    midiManager: MidiManager,
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
@@ -65,7 +68,8 @@ fun KeyQuestApp(
             }
             composable(route = KeyQuestScreens.Game.name) {
                 (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
-                LevelSelectScreen(
+                GameScreen(
+                    midiManager = midiManager,
                     modifier = Modifier.fillMaxHeight()
                 )
             }
