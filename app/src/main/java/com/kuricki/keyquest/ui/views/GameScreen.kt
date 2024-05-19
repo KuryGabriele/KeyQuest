@@ -38,6 +38,6 @@ fun GameScreen(
                 .align(Alignment.CenterHorizontally)
                 .padding(16.dp)
         )
-        PianoRoll(startNote = "C3", endNote = "C4", pressedNotes = gUiState.currPressedKeys, highlightedNotes = mutableSetOf())
+        PianoRoll(startNote = "C3", endNote = "G4", pressedNotes = gUiState.currPressedKeys, highlightedNotes = mutableSetOf())
     }
 }
