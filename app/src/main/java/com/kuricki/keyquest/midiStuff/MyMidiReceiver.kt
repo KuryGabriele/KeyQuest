@@ -4,6 +4,7 @@ import android.media.midi.MidiReceiver
 
 class MyMidiReceiver:MidiReceiver() {
     var keysPressedCurrently = mutableSetOf<String>()
+    var cb: (Set<String>) -> Unit = {}
     override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
         // Process the received MIDI data
         // For example, print the MIDI data to the log
@@ -28,6 +29,7 @@ class MyMidiReceiver:MidiReceiver() {
             i += 3
         }
 
-        println("Keys Pressed: $keysPressedCurrently")
+        cb(keysPressedCurrently)
+        //println("Keys Pressed: $keysPressedCurrently")
     }
 }
