@@ -6,30 +6,38 @@ class MyMidiReceiver:MidiReceiver() {
     var keysPressedCurrently = mutableSetOf<String>()
     var cb: (Set<String>) -> Unit = {}
     override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
-        // Process the received MIDI data
-        // For example, print the MIDI data to the log
+        // Get the midi data, its a byte array, I convert it to Int for easier handling
         val receivedData = data.copyOfRange(offset, offset + count)
-        //check if receivedData[1] is not null
-        //println("MIDI Data Received: ${receivedData.joinToString(", ")}")
 
         //Multiple key could be pressed at the same time
         var i = 0;
+        var changed = false;
         while(i < receivedData.size) {
             //check if midi signal is key pressed
             if(receivedData[i].toInt() == -112) {
                 if(receivedData[i+2].toInt() == 0) {
                     //if key is released, remove it from keysPressedCurrently
-                    keysPressedCurrently.remove(MidiToNote(receivedData[i+1].toInt()))
+                    val a = keysPressedCurrently.remove(MidiToNote(receivedData[i+1].toInt()))
+                    if(a) {
+                        // if key was removed, set changed to true
+                        changed = true
+                    }
                 } else if (receivedData[i+2].toInt() > 0) {
                     //if key is pressed, add it to keysPressedCurrently
-                    keysPressedCurrently.add(MidiToNote(receivedData[i+1].toInt()))
+                    val a = keysPressedCurrently.add(MidiToNote(receivedData[i+1].toInt()))
+                    if(a) {
+                        // if key was added, set changed to true
+                        changed = true
+                    }
                 }
             }
 
             i += 3
         }
 
-        cb(keysPressedCurrently)
-        //println("Keys Pressed: $keysPressedCurrently")
+        if(changed) {
+            //call cb only if the set changed
+            cb(keysPressedCurrently)
+        }
     }
 }
