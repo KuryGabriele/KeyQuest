@@ -10,7 +10,7 @@ class LevelSelectViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(LevelSelectUiState())
     val uiState: StateFlow<LevelSelectUiState> = _uiState.asStateFlow()
 
-    fun setUserName(_userName:String){
+    fun setUserName(_userName: String){
         _uiState.update{ currentState ->
             currentState.copy(
                 userName = _userName

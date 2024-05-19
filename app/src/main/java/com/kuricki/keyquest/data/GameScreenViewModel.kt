@@ -6,19 +6,18 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import com.kuricki.keyquest.midiStuff.MyMidiReceiver
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class GameScreenViewModel: ViewModel() {
     private lateinit var midiManager: MidiManager;
-    private lateinit var _uiState: MutableStateFlow<GameScreenUiState>
-    private lateinit var uiState: StateFlow<GameScreenUiState>
+    private val _uiState = MutableStateFlow(GameScreenUiState())
+    val uiState = _uiState.asStateFlow()
 
     fun start(mm: MidiManager) {
         midiManager = mm
-        var devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM)
+        val devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM)
 
         val listener = MidiManager.OnDeviceOpenedListener {
             println("Device opened")
@@ -29,24 +28,30 @@ class GameScreenViewModel: ViewModel() {
             }
             newPort.connect(newMr)
 
-            _uiState = MutableStateFlow(GameScreenUiState(
-                availableMidiDevices = devices,
-                currentMidiDevice = it,
-                openedMidiPort = newPort,
-                mmr = newMr
-            ))
+            _uiState.update { currState ->
+                currState.copy(
+                    mmr = newMr,
+                )
+            }
         }
 
-        val device = devices.last()
-        println("Device: $device")
-        midiManager.openDevice(device, listener, null)
-        uiState = _uiState.asStateFlow()
+        if(_uiState.value.currMidiDevice == null) {
+            //if device is already selected
+            val device = devices.last()
+            println("Device: $device")
+            _uiState.update { currState ->
+                currState.copy(
+                    currMidiDevice = device,
+                )
+            }
+            midiManager.openDevice(device, listener, null)
+        }
     }
 
     fun updateCurrPressedKey(newKeys: MutableSet<String>) {
-        println("New keys: $newKeys")
-        _uiState.update { currentState ->
-            currentState.copy(
+        _uiState.update {
+            println("Current keys" + it.currPressedKeys + "New keys: " + newKeys)
+            it.copy(
                 currPressedKeys = newKeys
             )
         }
