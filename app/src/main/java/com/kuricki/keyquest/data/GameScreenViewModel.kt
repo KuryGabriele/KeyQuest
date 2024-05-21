@@ -1,5 +1,6 @@
 package com.kuricki.keyquest.data
 
+import android.media.midi.MidiDeviceInfo
 import android.media.midi.MidiManager
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -17,8 +18,10 @@ class GameScreenViewModel: ViewModel() {
 
     fun start(mm: MidiManager) {
         midiManager = mm
-        val devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM)
+    }
 
+    fun selectMidiDevice(device: MidiDeviceInfo) {
+        println("Selecting new device: $device")
         val listener = MidiManager.OnDeviceOpenedListener {
             println("Device opened")
             val newPort = it.openOutputPort(0)
@@ -31,14 +34,17 @@ class GameScreenViewModel: ViewModel() {
             _uiState.update { currState ->
                 currState.copy(
                     mmr = newMr,
+                    midiPort = newPort,
                 )
             }
         }
 
-        if(_uiState.value.currMidiDevice == null) {
+        if(_uiState.value.currMidiDevice != device) {
             //if device is already selected
-            val device = devices.last()
             println("Device: $device")
+            //close old device
+            _uiState.value.midiPort?.close()
+
             _uiState.update { currState ->
                 currState.copy(
                     currMidiDevice = device,
@@ -46,6 +52,11 @@ class GameScreenViewModel: ViewModel() {
             }
             midiManager.openDevice(device, listener, null)
         }
+    }
+
+    fun getDevices(): MutableSet<MidiDeviceInfo> {
+        val devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM)
+        return devices
     }
 
     fun updateCurrPressedKey(newKeys: MutableSet<String>) {
