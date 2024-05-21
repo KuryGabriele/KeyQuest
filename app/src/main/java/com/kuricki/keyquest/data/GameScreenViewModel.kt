@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.update
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class GameScreenViewModel: ViewModel() {
-    private lateinit var midiManager: MidiManager;
+    private lateinit var midiManager: MidiManager
     private val _uiState = MutableStateFlow(GameScreenUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -32,35 +32,33 @@ class GameScreenViewModel: ViewModel() {
      * Select a new device and start listening to it
      */
     fun selectMidiDevice(device: MidiDeviceInfo) {
-        println("Selecting new device: $device")
-        val listener = MidiManager.OnDeviceOpenedListener {
-            println("Device opened")
-            val newPort = it.openOutputPort(0)
-            val newMr = MyMidiReceiver()
-            newMr.cb = { newSet ->
-                updateCurrPressedKey(newSet.toMutableSet())
-            }
-            newPort.connect(newMr)
-
-            _uiState.update { currState ->
-                currState.copy(
-                    mmr = newMr,
-                    midiPort = newPort,
-                )
-            }
-        }
-
         if(_uiState.value.currMidiDevice != device) {
-            //if device is already selected
+            //if device is not selected
             println("Device: $device")
             //close old device
             _uiState.value.midiPort?.close()
 
-            _uiState.update { currState ->
-                currState.copy(
-                    currMidiDevice = device,
-                )
+            //reset pressed keys in case some didn't release
+            updateCurrPressedKey(mutableSetOf())
+            //create midi listener for new device
+            val listener = MidiManager.OnDeviceOpenedListener {
+                println("Device opened")
+                val newPort = it.openOutputPort(0)
+                val newMr = MyMidiReceiver()
+                newMr.cb = { newSet ->
+                    updateCurrPressedKey(newSet.toMutableSet())
+                }
+                newPort.connect(newMr)
+
+                _uiState.update { currState ->
+                    currState.copy(
+                        mmr = newMr,
+                        midiPort = newPort,
+                        currMidiDevice = device,
+                    )
+                }
             }
+            //open new device
             midiManager.openDevice(device, listener, null)
         }
     }
