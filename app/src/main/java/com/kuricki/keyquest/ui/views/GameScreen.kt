@@ -64,7 +64,7 @@ fun GameScreen(
         PianoRoll(startNote = "C3", endNote = "G4", pressedNotes = gUiState.currPressedKeys, highlightedNotes = mutableSetOf())
     }
     if(gUiState.midiSelectionOpen) {
-        MidiDeviceSelection(midiManager = midiManager)
+        MidiDeviceSelection()
     }
 }
 
@@ -72,7 +72,6 @@ fun GameScreen(
 @Composable
 fun MidiDeviceSelection(
     modifier: Modifier = Modifier,
-    midiManager: MidiManager,
     gsvm: GameScreenViewModel = viewModel()
 ) {
     val gUiState by gsvm.uiState.collectAsState()
