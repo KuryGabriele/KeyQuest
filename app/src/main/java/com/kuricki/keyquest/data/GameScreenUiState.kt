@@ -11,5 +11,5 @@ data class GameScreenUiState(
     val midiPort: MidiOutputPort? = null,
     val mmr: MyMidiReceiver = MyMidiReceiver(),
     val currPressedKeys: MutableSet<String> = mutableSetOf<String>(),
-    val midiSelectionOpen: Boolean = true,
+    val midiSelectionOpen: Boolean = false,
 )
