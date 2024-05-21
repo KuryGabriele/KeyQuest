@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -26,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.GameScreenViewModel
 import com.kuricki.keyquest.ui.components.PianoRoll
+import com.kuricki.keyquest.ui.components.RoundedButtonWithIcon
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -40,17 +43,27 @@ fun GameScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Text(
-            text = "Keys: " + gUiState.currPressedKeys,
-            style = MaterialTheme.typography.displayMedium,
-            modifier = modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(16.dp)
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RoundedButtonWithIcon(
+                onClick = { gameScreenViewModel.midiSelectionOpen(true) },
+                icon = Icons.Default.Settings,
+                contentDescription = "Midi settings"
+            )
+            Text(
+                text = "Keys: " + gUiState.currPressedKeys,
+                style = MaterialTheme.typography.displayMedium,
+                modifier = modifier
+                    .padding(16.dp)
+            )
+
+        }
         PianoRoll(startNote = "C3", endNote = "G4", pressedNotes = gUiState.currPressedKeys, highlightedNotes = mutableSetOf())
     }
     if(gUiState.midiSelectionOpen) {
-        println("midi selection open " + gUiState.midiSelectionOpen.toString())
         MidiDeviceSelection(midiManager = midiManager)
     }
 }
