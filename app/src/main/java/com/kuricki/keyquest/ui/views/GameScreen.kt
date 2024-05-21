@@ -5,7 +5,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -47,7 +49,10 @@ fun GameScreen(
         )
         PianoRoll(startNote = "C3", endNote = "G4", pressedNotes = gUiState.currPressedKeys, highlightedNotes = mutableSetOf())
     }
-    MidiDeviceSelection(midiManager = midiManager)
+    if(gUiState.midiSelectionOpen) {
+        println("midi selection open " + gUiState.midiSelectionOpen.toString())
+        MidiDeviceSelection(midiManager = midiManager)
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -60,18 +65,19 @@ fun MidiDeviceSelection(
     val gUiState by gsvm.uiState.collectAsState()
     val midiDevices = gsvm.getDevices()
 
-    Dialog(onDismissRequest = { /*TODO*/ }) {
+    Dialog(onDismissRequest = {
+        gsvm.midiSelectionOpen(false)
+    }) {
         Card(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     modifier = Modifier.padding(16.dp),
@@ -79,16 +85,22 @@ fun MidiDeviceSelection(
                     style = MaterialTheme.typography.labelLarge
                 )
                 midiDevices.forEach { midiDevice ->
-                    RadioButton(
-                        selected = gUiState.currMidiDevice == midiDevice,
-                        onClick = {
-                            gsvm.selectMidiDevice(midiDevice)
-                        }
-                    )
-                    Text(
-                        text = midiDevice.properties.getString("product", "asd"),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+                    Row(
+                        modifier = Modifier.padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = gUiState.currMidiDevice == midiDevice,
+                            onClick = {
+                                gsvm.selectMidiDevice(midiDevice)
+                                gsvm.midiSelectionOpen(false)
+                            }
+                        )
+                        Text(
+                            text = midiDevice.properties.getString("product", "asd"),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
                 }
             }
         }
