@@ -15,17 +15,31 @@ class LoginViewModel: ViewModel() {
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     fun setUsrName(userName: String) {
+        if(userName.contains(' ')) {
+            setError("Username cannot contain spaces")
+            userName.trim(' ')
+        } else {
+            setError(null)
+        }
+
         _uiState.update{ currentState ->
             currentState.copy(
-                usrName = userName
+                usrName = userName,
             )
         }
     }
 
     fun setPsw(password: String) {
+        if(password.contains(' ')) {
+            setError("Password cannot contain spaces")
+            password.trim(' ')
+        } else {
+            setError(null)
+        }
+
         _uiState.update{ currentState ->
             currentState.copy(
-                psw = password
+                psw = password,
             )
         }
     }
@@ -35,8 +49,12 @@ class LoginViewModel: ViewModel() {
         val u = _uiState.value.usrName
         val p = _uiState.value.psw
         if(u.isEmpty() || p.isEmpty()) {
-            //If username or password is empty, show error message
             setError("Username or password cannot be empty")
+            return
+        }
+
+        if(u.contains(' ') || p.contains(' ')) {
+            setError("Username and password cannot contain spaces")
             return
         }
 
@@ -62,7 +80,7 @@ class LoginViewModel: ViewModel() {
         }
     }
 
-    fun setError(error: String) {
+    fun setError(error: String?) {
         _uiState.update{ currentState ->
             currentState.copy(
                 error = error
