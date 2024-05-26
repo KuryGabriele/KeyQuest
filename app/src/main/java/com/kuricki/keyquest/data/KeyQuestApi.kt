@@ -9,13 +9,15 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 @Serializable
 data class LoginSession (
     @JsonProperty("token") val token: String,
     @JsonProperty("id") val id: Int,
-    @JsonProperty("username") val userName: String,
+    @JsonProperty("username") val username: String,
+    @JsonProperty("tokenExpire") val tokenExpire: Long,
 )
 
 @Serializable
@@ -35,8 +37,8 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface KeyQuestApiService {
-    @GET("levels") //Get available levels from api
-    suspend fun getLevels(): MutableList<GameLevel>
+    @GET("levels") //Get available levels from api, requires token
+    suspend fun getLevels(@Header("Authorization") authorization: String): MutableList<GameLevel>
 
     @POST("auth/login") //Get login session from api
     suspend fun getLoginSession(@Body b: JsonObject): LoginSession
