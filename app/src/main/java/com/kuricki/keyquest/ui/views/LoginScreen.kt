@@ -21,12 +21,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kuricki.keyquest.R
+import com.kuricki.keyquest.data.LoginSession
 import com.kuricki.keyquest.data.LoginViewModel
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onLoginSuccess: () -> Unit = {},
+    onLoginSuccess: (session: LoginSession) -> Unit = {},
     loginViewModel: LoginViewModel = viewModel()
 ){
     val loginUiState by loginViewModel.uiState.collectAsState()
@@ -51,7 +52,8 @@ fun LoginScreen(
                 value = loginUiState.usrName,
                 onValueChange = { loginViewModel.setUsrName(it) },
                 label = { Text(stringResource(R.string.username)) },
-                singleLine = true
+                singleLine = true,
+                isError = loginUiState.error != null
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextField(
@@ -59,7 +61,13 @@ fun LoginScreen(
                 onValueChange = { loginViewModel.setPsw(it) },
                 label = { Text(stringResource(R.string.password)) },
                 visualTransformation = PasswordVisualTransformation(),
-                singleLine = true
+                singleLine = true,
+                isError = loginUiState.error != null,
+                supportingText = {
+                    if (loginUiState.error != null) {
+                        Text(loginUiState.error.toString())
+                    }
+                }
             )
             Spacer(modifier = Modifier.height(64.dp))
             Row(
@@ -70,7 +78,7 @@ fun LoginScreen(
                     modifier = modifier
                         .width(150.dp)
                         .height(50.dp),
-                    onClick = { loginViewModel.loginUser() }) {
+                    onClick = { loginViewModel.loginUser(onLoginSuccess) }) {
                     Text(
                         stringResource(R.string.login),
                         style = MaterialTheme.typography.bodyLarge
