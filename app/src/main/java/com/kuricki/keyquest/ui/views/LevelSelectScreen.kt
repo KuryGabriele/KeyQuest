@@ -25,14 +25,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.GameLevel
 import com.kuricki.keyquest.data.LevelSelectViewModel
+import com.kuricki.keyquest.data.LoginSession
 
 @Composable
 fun LevelSelectScreen(
     modifier: Modifier = Modifier,
     onLevelSelected: (Int) -> Unit = {},
-    levelSelectViewModel: LevelSelectViewModel = viewModel()
+    levelSelectViewModel: LevelSelectViewModel = viewModel(),
+    loginSession: LoginSession
 ) {
     val lsUiState by levelSelectViewModel.uiState.collectAsState()
+    levelSelectViewModel.setUserName(loginSession.username)
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top
@@ -63,7 +67,7 @@ fun LevelCard(
     modifier: Modifier,
     onLevelSelected: (Int) -> Unit = {},
     levelSelectViewModel: LevelSelectViewModel = viewModel(),
-    lvl: GameLevel
+    lvl: GameLevel,
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(

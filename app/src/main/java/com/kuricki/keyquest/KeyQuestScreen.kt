@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.kuricki.keyquest.data.LoginSession
 import com.kuricki.keyquest.ui.views.GameScreen
 import com.kuricki.keyquest.ui.views.LevelSelectScreen
 import com.kuricki.keyquest.ui.views.LoginScreen
@@ -37,6 +38,8 @@ fun KeyQuestApp(
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
+    var loginSession: LoginSession? = null
+
     Scaffold(){
         innerPadding ->
         NavHost(
@@ -51,6 +54,8 @@ fun KeyQuestApp(
                 (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 LoginScreen(
                     onLoginSuccess = {
+                        println("Login success $it.id")
+                        loginSession = it
                         navController.navigate(KeyQuestScreens.LevelSelect.name)
                     },
                     modifier = Modifier.fillMaxHeight()
@@ -58,13 +63,20 @@ fun KeyQuestApp(
             }
             composable(route = KeyQuestScreens.LevelSelect.name) {
                 (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                LevelSelectScreen(
-                    modifier = Modifier.fillMaxHeight(),
-                    onLevelSelected = { level: Int ->
-                        println("Level selected: $level")
-                        navController.navigate(KeyQuestScreens.Game.name)
-                    }
-                )
+                if(loginSession == null) {
+                    navController.navigate(KeyQuestScreens.Login.name)
+                }
+
+                loginSession?.let { it1 ->
+                    LevelSelectScreen(
+                        modifier = Modifier.fillMaxHeight(),
+                        onLevelSelected = { level: Int ->
+                            println("Level selected: $level")
+                            navController.navigate(KeyQuestScreens.Game.name)
+                        },
+                        loginSession = it1
+                    )
+                }
             }
             composable(route = KeyQuestScreens.Game.name) {
                 (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
