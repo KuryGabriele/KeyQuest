@@ -70,7 +70,7 @@ fun LoginScreen(
                     modifier = modifier
                         .width(150.dp)
                         .height(50.dp),
-                    onClick = { onLoginSuccess() }) {
+                    onClick = { loginViewModel.loginUser() }) {
                     Text(
                         stringResource(R.string.login),
                         style = MaterialTheme.typography.bodyLarge
