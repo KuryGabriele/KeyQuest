@@ -32,11 +32,19 @@ class LoginViewModel: ViewModel() {
 
     fun loginUser(onLoginSuccess: (a: LoginSession) -> Unit) {
         println("Login", )
+        val u = _uiState.value.usrName
+        val p = _uiState.value.psw
+        if(u.isEmpty() || p.isEmpty()) {
+            //If username or password is empty, show error message
+            setError("Username or password cannot be empty")
+            return
+        }
+
         viewModelScope.launch {
             try {
                 val json = mapOf(
-                        "username" to parseToJsonElement(_uiState.value.usrName),
-                        "hash" to parseToJsonElement(_uiState.value.psw)
+                        "username" to parseToJsonElement(u),
+                        "hash" to parseToJsonElement(p)
                 )
                 val a = KeyQuestApi.retrofitService.getLoginSession(
                     JsonObject(json)
