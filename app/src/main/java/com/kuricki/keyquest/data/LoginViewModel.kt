@@ -2,7 +2,6 @@ package com.kuricki.keyquest.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.network.HttpException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +30,7 @@ class LoginViewModel: ViewModel() {
         }
     }
 
-    fun loginUser() {
+    fun loginUser(onLoginSuccess: (a: LoginSession) -> Unit) {
         println("Login", )
         viewModelScope.launch {
             try {
@@ -39,15 +38,27 @@ class LoginViewModel: ViewModel() {
                         "username" to parseToJsonElement(_uiState.value.usrName),
                         "hash" to parseToJsonElement(_uiState.value.psw)
                 )
-                val r = KeyQuestApi.retrofitService.getLoginSession(
+                val a = KeyQuestApi.retrofitService.getLoginSession(
                     JsonObject(json)
                 )
-                println("Done " + r.id)
-            } catch (e: HttpException) {
-                println(e)
+
+                onLoginSuccess(a)
+            } catch (e: retrofit2.HttpException) {
+                if(e.code() == 406) {
+                    setError("Wrong username or password")
+                }
             } catch (e: Exception) {
                 println(e)
+                setError("Login failed")
             }
+        }
+    }
+
+    fun setError(error: String) {
+        _uiState.update{ currentState ->
+            currentState.copy(
+                error = error
+            )
         }
     }
 }
