@@ -1,20 +1,24 @@
 package com.kuricki.keyquest.data
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Response
-import retrofit2.Call
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.jackson.JacksonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 
+@Serializable
 data class LoginSession (
     @JsonProperty("token") val token: String,
     @JsonProperty("id") val id: Int,
-    @JsonProperty("usrName") val userName: String,
+    @JsonProperty("username") val userName: String,
 )
 
+@Serializable
 data class GameLevel (
     @JsonProperty("id") var id: Int,
     @JsonProperty("displayName") var displayName: String,
@@ -23,46 +27,22 @@ data class GameLevel (
     @JsonProperty("bestScore") var bestScore: Int,
 )
 
-object KeyQuestApi {
-    private const val BASE_URL = "keyquest.kuricki.com"
-    private var token:String = "undefined" //api auth token
+private const val BASE_URL = "https://keyquest.kuricki.com/api/"
 
-    object RequestInterceptor : Interceptor {
-        //intercepts all requests, useful to add headers to all requests
-        override fun intercept(chain: Interceptor.Chain): Response {
-            //add auth token to all requests
-            val request = chain.request().newBuilder()
-                .addHeader("Authorization", token)
-            return chain.proceed(request.build())
-        }
-    }
+private val retrofit = Retrofit.Builder()
+    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+    .baseUrl(BASE_URL)
+    .build()
 
-    private val okHttpClient = OkHttpClient()
-        //Used to add interceptor
-        .newBuilder()
-        .addInterceptor(RequestInterceptor)
-        .build()
-
-    //retrofit client
-    fun getClient():Retrofit =
-        Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(BASE_URL)
-            .addConverterFactory(JacksonConverterFactory.create())
-            .build()
-
-    fun setToken(newToken:String){
-        token = newToken
-    }
-}
-
-interface levels {
+interface KeyQuestApiService {
     @GET("levels") //Get available levels from api
-    fun getLevels(): Call<MutableList<GameLevel>>
+    suspend fun getLevels(): MutableList<GameLevel>
 
+    @POST("auth/login") //Get login session from api
+    suspend fun getLoginSession(@Body b: JsonObject): LoginSession
 }
 
-interface authentication {
-    @GET("login") //Login user
-    fun login(): Call<LoginSession>
+object KeyQuestApi {
+    val retrofitService : KeyQuestApiService by lazy {
+        retrofit.create(KeyQuestApiService::class.java) }
 }
