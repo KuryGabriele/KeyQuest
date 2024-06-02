@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.sp
 
 data class DisplayNote(
     val pitch: String,
-    val positionX: Float,
     val positionY: Float,
     val lined: Boolean
 )
@@ -27,13 +26,16 @@ fun MusicSheet (
     notes: List<DisplayNote> = listOf(
         DisplayNote(
             pitch = "C4",
-            positionX = 100f,
             positionY = 300f,
             lined = true
         ),
         DisplayNote(
             pitch = "D3",
-            positionX = 200f,
+            positionY = 100f,
+            lined = false
+        ),
+        DisplayNote(
+            pitch = "D3",
             positionY = 100f,
             lined = false
         )),
@@ -58,19 +60,20 @@ fun MusicSheet (
             }
 
             // foreach note
+            var noteOffset = 100f //position of the notes
             for(note in notes) {
                 //draw it as a circle
                 drawCircle(
                     color = Color.Black,
                     radius = 20f,
-                    center = Offset(note.positionX, note.positionY)
+                    center = Offset(noteOffset, note.positionY)
                 )
                 if(note.lined) {
                     //draw horizontal line across note
                     drawLine(
                         color = Color.Black,
-                        start = Offset(note.positionX-35f, note.positionY),
-                        end = Offset(note.positionX+35f, note.positionY),
+                        start = Offset(noteOffset-35f, note.positionY),
+                        end = Offset(noteOffset+35f, note.positionY),
                         strokeWidth = 10f
                     )
                 }
@@ -80,16 +83,16 @@ fun MusicSheet (
                     // draw vertical line downwards from note
                     drawLine(
                         color = Color.Black,
-                        start = Offset(note.positionX+18f, note.positionY),
-                        end = Offset(note.positionX+18f, note.positionY+125f),
+                        start = Offset(noteOffset+18f, note.positionY),
+                        end = Offset(noteOffset+18f, note.positionY+125f),
                         strokeWidth = 5f
                     )
                 } else {
                     //draw vertical line upwards from note
                     drawLine(
                         color = Color.Black,
-                        start = Offset(note.positionX+18f, note.positionY),
-                        end = Offset(note.positionX+18f, note.positionY-125f),
+                        start = Offset(noteOffset+18f, note.positionY),
+                        end = Offset(noteOffset+18f, note.positionY-125f),
                         strokeWidth = 5f
                     )
                 }
@@ -97,13 +100,15 @@ fun MusicSheet (
                 // draw pitch text
                 drawContext.canvas.nativeCanvas.drawText (
                     note.pitch,
-                    note.positionX - 20f,
+                    noteOffset - 20f,
                     375f,
                     Paint().asFrameworkPaint().apply {
                         color = Color.Black.toArgb()
                         textSize = 15.sp.toPx()
                     }
                 )
+
+                noteOffset += 100f
             }
         }
     }
