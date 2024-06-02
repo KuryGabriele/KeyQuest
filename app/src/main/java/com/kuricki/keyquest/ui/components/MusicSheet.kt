@@ -33,9 +33,9 @@ fun MusicSheet (
             lined = true
         ),
         DisplayNote(
-            pitch = "D4",
+            pitch = "D3",
             positionX = 200f,
-            positionY = 270f,
+            positionY = 100f,
             lined = false
         )),
 ) {
@@ -57,8 +57,11 @@ fun MusicSheet (
                 )
             }
 
+            // foreach note
             for(note in notes) {
+                //draw it as a circle
                 drawCircle(
+
                     color = Color.Black,
                     radius = 20f,
                     center = Offset(note.positionX, note.positionY)
@@ -72,6 +75,25 @@ fun MusicSheet (
                         strokeWidth = 10f
                     )
                 }
+
+                if(note.positionY < 200) {
+                    // draw vertical line downwards from note
+                    drawLine(
+                        color = Color.Black,
+                        start = Offset(note.positionX+18f, note.positionY),
+                        end = Offset(note.positionX+18f, note.positionY+125f),
+                        strokeWidth = 5f
+                    )
+                } else {
+                    //draw vertical line upwards from note
+                    drawLine(
+                        color = Color.Black,
+                        start = Offset(note.positionX+18f, note.positionY),
+                        end = Offset(note.positionX+18f, note.positionY-125f),
+                        strokeWidth = 5f
+                    )
+                }
+
                 // draw pitch text
                 drawContext.canvas.nativeCanvas.drawText (
                     note.pitch,
