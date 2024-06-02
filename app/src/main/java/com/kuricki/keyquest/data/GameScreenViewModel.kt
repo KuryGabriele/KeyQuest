@@ -16,9 +16,13 @@ class GameScreenViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(GameScreenUiState())
     val uiState = _uiState.asStateFlow()
 
+    /**
+     * Initialize the view model
+     * Will start listening to the midi device if no device is selected
+     */
     fun start(mm: MidiManager) {
         midiManager = mm
-        //if no device selected
+        //if no device selected, f.e. when the app is opened for the first time
         if(_uiState.value.currMidiDevice == null) {
             //select last device
             val devices = getDevices()
@@ -64,7 +68,8 @@ class GameScreenViewModel: ViewModel() {
     }
 
     fun getDevices(): MutableSet<MidiDeviceInfo> {
-        val devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM)
+        //fetches all midi devices from the system
+        val devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM) //midi 1.0
         return devices
     }
 
@@ -81,6 +86,9 @@ class GameScreenViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Open the midi selection dialog
+     */
     fun midiSelectionOpen(open: Boolean) {
         _uiState.update {
             it.copy(

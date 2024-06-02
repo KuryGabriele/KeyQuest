@@ -23,12 +23,14 @@ import com.kuricki.keyquest.ui.views.GameScreen
 import com.kuricki.keyquest.ui.views.LevelSelectScreen
 import com.kuricki.keyquest.ui.views.LoginScreen
 
-
+/**
+ * Enum class for all the screens in the app
+ */
 enum class KeyQuestScreens() {
-    Login(),
-    LevelSelect(),
-    Game(),
-    Summary()
+    Login(), //login screen
+    LevelSelect(), //level selection screen
+    Game(), // game screen
+    Summary() // summary screen with score
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -40,6 +42,7 @@ fun KeyQuestApp(
     val context = LocalContext.current
     var loginSession: LoginSession? = null
 
+    //scaffolding for the router
     Scaffold(){
         innerPadding ->
         NavHost(
@@ -50,6 +53,7 @@ fun KeyQuestApp(
                 .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
         ){
+            //login screen
             composable(route = KeyQuestScreens.Login.name) {
                 (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 LoginScreen(
@@ -61,6 +65,7 @@ fun KeyQuestApp(
                     modifier = Modifier.fillMaxHeight()
                 )
             }
+            //level selection screen
             composable(route = KeyQuestScreens.LevelSelect.name) {
                 (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 if(loginSession == null) {
@@ -71,6 +76,7 @@ fun KeyQuestApp(
                     LevelSelectScreen(
                         modifier = Modifier.fillMaxHeight(),
                         onLevelSelected = { level: Int ->
+                            //navigate to the game screen with the selected level
                             println("Level selected: $level")
                             navController.navigate(KeyQuestScreens.Game.name)
                         },
@@ -78,6 +84,7 @@ fun KeyQuestApp(
                     )
                 }
             }
+            //game screen
             composable(route = KeyQuestScreens.Game.name) {
                 (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
                 GameScreen(

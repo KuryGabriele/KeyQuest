@@ -10,6 +10,10 @@ class LevelSelectViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(LevelSelectUiState())
     val uiState: StateFlow<LevelSelectUiState> = _uiState.asStateFlow()
 
+    /**
+     * Set the username
+     * @param _userName the username
+     */
     fun setUserName(_userName: String){
         _uiState.update{ currentState ->
             currentState.copy(
@@ -18,6 +22,10 @@ class LevelSelectViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Set the game levels
+     * @param newLevels the game levels
+     */
     fun setLevels(newLevels: MutableList<GameLevel>){
         _uiState.update{ currentState ->
             currentState.copy(
@@ -26,6 +34,12 @@ class LevelSelectViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Update single level
+     * @param _id the level id
+     * @param _currentScore the new score
+     * @param _bestScore the new best score
+     */
     fun updateLevel(_id: Int, _currentScore: Int, _bestScore: Int){
         //find the level and update it
         val l = _uiState.value.levels

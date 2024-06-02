@@ -1,7 +1,7 @@
 package com.kuricki.keyquest.data
 
 data class LoginUiState(
-    val usrName: String = "",
-    val psw: String = "",
-    val error: String? = null
+    val usrName: String = "", // username
+    val psw: String = "", // password
+    val error: String? = null //error message
 )

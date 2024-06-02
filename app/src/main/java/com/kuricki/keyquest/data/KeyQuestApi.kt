@@ -12,6 +12,9 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
+/**
+ * Data class for login session
+ */
 @Serializable
 data class LoginSession (
     @JsonProperty("token") val token: String,
@@ -20,6 +23,9 @@ data class LoginSession (
     @JsonProperty("tokenExpire") val tokenExpire: Long,
 )
 
+/**
+ * Data class for game level
+ */
 @Serializable
 data class GameLevel (
     @JsonProperty("id") var id: Int,
@@ -29,8 +35,9 @@ data class GameLevel (
     @JsonProperty("bestScore") var bestScore: Int,
 )
 
-private const val BASE_URL = "https://keyquest.kuricki.com/api/"
+private const val BASE_URL = "https://keyquest.kuricki.com/api/" //api base url
 
+//Retrofit instance
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
     .baseUrl(BASE_URL)
@@ -45,6 +52,7 @@ interface KeyQuestApiService {
 }
 
 object KeyQuestApi {
+    //expose retrofit service
     val retrofitService : KeyQuestApiService by lazy {
         retrofit.create(KeyQuestApiService::class.java) }
 }

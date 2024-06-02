@@ -20,7 +20,6 @@ data class DisplayNote(
     val lined: Boolean
 )
 
-
 @Preview
 @Composable
 fun MusicSheet (
@@ -48,6 +47,7 @@ fun MusicSheet (
         ) {
             val width = size.width
 
+            // draw the pentagram
             for(i in 1..5) {
                 drawLine(
                     color = Color.Black,
@@ -61,7 +61,6 @@ fun MusicSheet (
             for(note in notes) {
                 //draw it as a circle
                 drawCircle(
-
                     color = Color.Black,
                     radius = 20f,
                     center = Offset(note.positionX, note.positionY)
@@ -76,6 +75,7 @@ fun MusicSheet (
                     )
                 }
 
+                // check if vertical line can be drawn up
                 if(note.positionY < 200) {
                     // draw vertical line downwards from note
                     drawLine(
