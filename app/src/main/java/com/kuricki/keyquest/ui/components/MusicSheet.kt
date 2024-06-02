@@ -7,7 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 
 data class DisplayNote(
     val pitch: String,
@@ -43,7 +47,6 @@ fun MusicSheet (
             modifier= Modifier.fillMaxSize(),
         ) {
             val width = size.width
-            val height = size.height
 
             for(i in 1..5) {
                 drawLine(
@@ -69,8 +72,17 @@ fun MusicSheet (
                         strokeWidth = 10f
                     )
                 }
+                // draw pitch text
+                drawContext.canvas.nativeCanvas.drawText (
+                    note.pitch,
+                    note.positionX - 20f,
+                    375f,
+                    Paint().asFrameworkPaint().apply {
+                        color = Color.Black.toArgb()
+                        textSize = 15.sp.toPx()
+                    }
+                )
             }
         }
     }
-
 }
