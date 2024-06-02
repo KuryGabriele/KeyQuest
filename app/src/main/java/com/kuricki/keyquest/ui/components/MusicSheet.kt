@@ -17,7 +17,8 @@ import androidx.compose.ui.unit.sp
 data class DisplayNote(
     val pitch: String,
     val positionY: Float,
-    val lined: Boolean
+    val lined: Boolean,
+    val alteration: Int = 0 // 0 = no alteration, 1 = sharp, -1 = flat
 )
 
 @Preview
@@ -28,17 +29,20 @@ fun MusicSheet (
         DisplayNote(
             pitch = "C4",
             positionY = 300f,
-            lined = true
+            lined = true,
+            alteration = 1
+        ),
+        DisplayNote(
+            pitch = "E5♭",
+            positionY = 75f,
+            lined = false,
+            alteration = -1
         ),
         DisplayNote(
             pitch = "D5",
             positionY = 100f,
-            lined = false
-        ),
-        DisplayNote(
-            pitch = "D5",
-            positionY = 100f,
-            lined = false
+            lined = false,
+            alteration = 0
         )),
     options: MusicSheetOptions = MusicSheetOptions()
 ) {
@@ -73,9 +77,33 @@ fun MusicSheet (
                     //draw horizontal line across note
                     drawLine(
                         color = options.notesColor,
-                        start = Offset(noteOffset-35f, note.positionY),
-                        end = Offset(noteOffset+35f, note.positionY),
+                        start = Offset(noteOffset-options.notesLinedLengthScaled, note.positionY),
+                        end = Offset(noteOffset+options.notesLinedLengthScaled, note.positionY),
                         strokeWidth = options.notesLinedWidthScaled
+                    )
+                }
+
+                if(note.alteration == 1) {
+                    // draw sharp text
+                    drawContext.canvas.nativeCanvas.drawText (
+                        "♯",
+                        noteOffset - options.notesRadiusScaled - options.alterationSharpOffsetScaled,
+                        note.positionY,
+                        Paint().asFrameworkPaint().apply {
+                            color = Color.Black.toArgb()
+                            textSize = options.alterationSharpFontSizeScaled.toPx()
+                        }
+                    )
+                } else if(note.alteration == -1) {
+                    // draw flat text
+                    drawContext.canvas.nativeCanvas.drawText (
+                        "♭",
+                        noteOffset - options.notesRadiusScaled-options.alterationFlatOffsetScaled,
+                        note.positionY,
+                        Paint().asFrameworkPaint().apply {
+                            color = Color.Black.toArgb()
+                            textSize = options.alterationFlatFontSizeScaled.toPx()
+                        }
                     )
                 }
 
@@ -125,23 +153,35 @@ data class MusicSheetOptions(
     val notesPitchColor: Color = Color.Black,
     val notesOffset: Float = 100f,
     val notesRadius: Float = 20f,
-    val notesLinesWidth: Float = 10f,
+    val notesHeightOffset: Float = 25f,
+    val notesLinedWidth: Float = 10f,
+    val notesLinedLength: Float = 30f,
     val maxHeightForVerticalLineUp: Float = 200f,
     val verticalLineLength: Float = 125f,
     val verticalLineOffset: Float = 18f,
     val verticalLineWidth: Float = 5f,
     val pitchNotesHeight: Float = 375f,
-    val pitchNotesSize: TextUnit = 15.sp
+    val pitchNotesSize: TextUnit = 15.sp,
+    val alterationSharpFontSize: TextUnit = 25.sp,
+    val alterationFlatFontSize: TextUnit = 40.sp,
+    val alterationSharpOffset: Float = 50f,
+    val alterationFlatOffset: Float = 40f,
 ) {
     val pentagramLinesWidthScaled = pentagramLinesWidth * sizeScale
     val pentagramLinesSpacingScaled = pentagramLinesSpacing * sizeScale
     val notesOffsetScaled = notesOffset * sizeScale
     val notesRadiusScaled = notesRadius * sizeScale
-    val notesLinedWidthScaled = notesLinesWidth * sizeScale
+    val notesHeightOffsetScaled = notesHeightOffset * sizeScale
+    val notesLinedWidthScaled = notesLinedWidth * sizeScale
+    val notesLinedLengthScaled = notesLinedLength * sizeScale
     val maxHeightForVerticalLineUpScaled = maxHeightForVerticalLineUp * sizeScale
     val verticalLineLengthScaled = verticalLineLength * sizeScale
     val verticalLineOffsetScaled = verticalLineOffset * sizeScale
     val verticalLineWidthScaled = verticalLineWidth * sizeScale
     val pitchNotesHeightScaled = pitchNotesHeight * sizeScale
     val pitchNotesSizeScaled = pitchNotesSize * sizeScale
+    val alterationSharpFontSizeScaled = alterationSharpFontSize * sizeScale
+    val alterationFlatFontSizeScaled = alterationFlatFontSize * sizeScale
+    val alterationSharpOffsetScaled = alterationSharpOffset * sizeScale
+    val alterationFlatOffsetScaled = alterationFlatOffset * sizeScale
 }
