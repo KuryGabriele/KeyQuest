@@ -14,7 +14,12 @@ interface UserSessionDao {
     @Delete
     suspend fun delete(userSession: UserSession)
 
+    // Get specific session by id
     @Query("SELECT * FROM UserSession WHERE id = :userId")
-    suspend fun getSession(userId: Int)
+    suspend fun getSession(userId: Int): UserSession?
+
+    // Get the first session, should be the only one in the table
+    @Query("SELECT * FROM UserSession ORDER BY id ASC LIMIT 1")
+    suspend fun getFirstSession(): UserSession?
 
 }
