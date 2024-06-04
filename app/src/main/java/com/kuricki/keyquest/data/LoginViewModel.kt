@@ -59,7 +59,7 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
      * @param onLoginSuccess The callback function to be called when the login is successful
      */
     fun loginUser(onLoginSuccess: (a: UserSession) -> Unit) {
-        println("Login", )
+        println("Login")
         val u = _uiState.value.usrName
         val p = _uiState.value.psw
         // Check for empty username or password
@@ -101,6 +101,20 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
             }
         }
     }
+
+    fun checkSession(a: (UserSession) -> Unit) {
+        viewModelScope.launch {
+            val s = repository.getSession().collect {
+                if (it != null) {
+                    //TODO check if session is still valid
+                    a(it)
+                } else {
+                    println("No session")
+                }
+            }
+        }
+    }
+
 
     /**
      * Displays the error message in login screen.
