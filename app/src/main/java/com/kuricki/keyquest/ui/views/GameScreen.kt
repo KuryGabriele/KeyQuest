@@ -83,7 +83,10 @@ fun GameScreen(
     }
 
     if(gUiState.newDeviceConnected) {
-        Toast.makeText(LocalContext.current, "Connected to: " + gUiState.currMidiDevice!!.properties.getString("product", "asd"), Toast.LENGTH_SHORT).show()
+        //if a new device is connected, show a toast
+        val newDevice = gUiState.currMidiDevice!!.properties.getString("product", "asd")
+        Toast.makeText(LocalContext.current, "Connected to: $newDevice", Toast.LENGTH_SHORT).show()
+        //reset the flag
         gameScreenViewModel.deviceConnectedNotificationShown()
     }
 }

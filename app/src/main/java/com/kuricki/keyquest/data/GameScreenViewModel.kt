@@ -98,6 +98,9 @@ class GameScreenViewModel: ViewModel() {
         }
     }
 
+    /**
+     * No need to show the notification again
+     */
     fun deviceConnectedNotificationShown() {
         _uiState.update {
             it.copy(
