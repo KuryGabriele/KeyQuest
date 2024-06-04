@@ -5,8 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "GameLevel")
 data class GameLevel(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    @PrimaryKey val id: Int,
     val displayName: String,
     val difficulty: Int,
     val currentScore: Int,
