@@ -2,12 +2,13 @@ package com.kuricki.keyquest.data
 
 import androidx.lifecycle.ViewModel
 import com.kuricki.keyquest.db.GameLevel
+import com.kuricki.keyquest.db.GameLevelRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class LevelSelectViewModel: ViewModel() {
+class LevelSelectViewModel(private val repository: GameLevelRepository): ViewModel() {
     private val _uiState = MutableStateFlow(LevelSelectUiState())
     val uiState: StateFlow<LevelSelectUiState> = _uiState.asStateFlow()
 

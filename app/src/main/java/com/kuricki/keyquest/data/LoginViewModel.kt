@@ -3,6 +3,7 @@ package com.kuricki.keyquest.data
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kuricki.keyquest.db.UserSession
+import com.kuricki.keyquest.db.UserSessionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json.Default.parseToJsonElement
 import kotlinx.serialization.json.JsonObject
 
-class LoginViewModel: ViewModel() {
+class LoginViewModel(private val repository: UserSessionRepository): ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
@@ -83,7 +84,9 @@ class LoginViewModel: ViewModel() {
                 val a = KeyQuestApi.retrofitService.getLoginSession(
                     JsonObject(json)
                 )
-                //TODO save session token
+
+                //save session in repository
+                repository.setSession(a)
 
                 //callback
                 onLoginSuccess(a)

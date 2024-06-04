@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kuricki.keyquest.R
+import com.kuricki.keyquest.data.AppViewModelProvider
 import com.kuricki.keyquest.data.LevelSelectViewModel
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.db.UserSession
@@ -31,7 +32,7 @@ import com.kuricki.keyquest.db.UserSession
 fun LevelSelectScreen(
     modifier: Modifier = Modifier,
     onLevelSelected: (Int) -> Unit = {},
-    levelSelectViewModel: LevelSelectViewModel = viewModel(),
+    levelSelectViewModel: LevelSelectViewModel = viewModel(factory = AppViewModelProvider.Factory),
     loginSession: UserSession
 ) {
     val lsUiState by levelSelectViewModel.uiState.collectAsState()

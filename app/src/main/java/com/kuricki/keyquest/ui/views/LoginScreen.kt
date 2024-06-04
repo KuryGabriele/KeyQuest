@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kuricki.keyquest.R
+import com.kuricki.keyquest.data.AppViewModelProvider
 import com.kuricki.keyquest.data.LoginViewModel
 import com.kuricki.keyquest.db.UserSession
 
@@ -33,7 +34,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccess: (session: UserSession) -> Unit = {},
     loginSession: UserSession? = null,
-    loginViewModel: LoginViewModel = viewModel()
+    loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
     val loginUiState by loginViewModel.uiState.collectAsState()
     Column(
