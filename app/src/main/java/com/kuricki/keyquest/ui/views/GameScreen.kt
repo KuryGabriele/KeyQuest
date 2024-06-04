@@ -3,6 +3,7 @@ package com.kuricki.keyquest.ui.views
 import android.media.midi.MidiManager
 import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,10 +38,15 @@ import com.kuricki.keyquest.ui.components.RoundedButtonWithIcon
 fun GameScreen(
     modifier: Modifier = Modifier,
     midiManager: MidiManager,
-    gameScreenViewModel: GameScreenViewModel = viewModel()
+    gameScreenViewModel: GameScreenViewModel = viewModel(),
+    onBack: () -> Unit
 ) {
     gameScreenViewModel.start(midiManager)
     val gUiState by gameScreenViewModel.uiState.collectAsState()
+    BackHandler {
+        println("Back pressed")
+        onBack()
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
