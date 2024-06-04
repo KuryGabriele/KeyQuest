@@ -12,7 +12,7 @@ abstract class KeyquestDatabase: RoomDatabase() {
     companion object {
         @Volatile
         private var Instance: KeyquestDatabase? = null
-        
+
         fun getDatabase(context: Context): KeyquestDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(

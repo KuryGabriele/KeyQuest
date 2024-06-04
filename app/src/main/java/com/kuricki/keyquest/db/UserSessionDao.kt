@@ -8,10 +8,10 @@ import androidx.room.Query
 
 @Dao
 interface UserSessionDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(UserSession::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(userSession: UserSession)
 
-    @Delete
+    @Delete(UserSession::class)
     suspend fun delete(userSession: UserSession)
 
     // Get specific session by id
@@ -21,5 +21,4 @@ interface UserSessionDao {
     // Get the first session, should be the only one in the table
     @Query("SELECT * FROM UserSession ORDER BY id ASC LIMIT 1")
     suspend fun getFirstSession(): UserSession?
-
 }
