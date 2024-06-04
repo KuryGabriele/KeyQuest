@@ -33,10 +33,10 @@ import com.kuricki.keyquest.db.UserSession
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccess: (session: UserSession) -> Unit = {},
-    loginSession: UserSession? = null,
     loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
     val loginUiState by loginViewModel.uiState.collectAsState()
+    loginViewModel.checkSession(onLoginSuccess)
     Column(
         modifier = Modifier,
         verticalArrangement = Arrangement.SpaceAround
