@@ -32,6 +32,7 @@ import com.kuricki.keyquest.data.LoginViewModel
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccess: (session: LoginSession) -> Unit = {},
+    loginSession: LoginSession? = null,
     loginViewModel: LoginViewModel = viewModel()
 ){
     val loginUiState by loginViewModel.uiState.collectAsState()

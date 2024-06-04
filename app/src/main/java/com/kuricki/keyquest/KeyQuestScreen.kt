@@ -51,7 +51,7 @@ fun KeyQuestApp(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
+                .padding(innerPadding),
         ){
             //login screen
             composable(route = KeyQuestScreens.Login.name) {
@@ -67,10 +67,11 @@ fun KeyQuestApp(
             }
             //level selection screen
             composable(route = KeyQuestScreens.LevelSelect.name) {
-                (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 if(loginSession == null) {
                     navController.navigate(KeyQuestScreens.Login.name)
                 }
+                (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
 
                 loginSession?.let { it1 ->
                     LevelSelectScreen(

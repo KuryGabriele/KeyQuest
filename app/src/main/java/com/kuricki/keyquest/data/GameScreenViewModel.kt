@@ -59,6 +59,7 @@ class GameScreenViewModel: ViewModel() {
                         mmr = newMr,
                         midiPort = newPort,
                         currMidiDevice = device,
+                        newDeviceConnected = true
                     )
                 }
             }
@@ -93,6 +94,14 @@ class GameScreenViewModel: ViewModel() {
         _uiState.update {
             it.copy(
                 midiSelectionOpen = open
+            )
+        }
+    }
+
+    fun deviceConnectedNotificationShown() {
+        _uiState.update {
+            it.copy(
+                newDeviceConnected = false
             )
         }
     }
