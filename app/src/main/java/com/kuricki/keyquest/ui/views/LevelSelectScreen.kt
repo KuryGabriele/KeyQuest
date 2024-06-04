@@ -1,5 +1,7 @@
 package com.kuricki.keyquest.ui.views
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,11 +36,16 @@ fun LevelSelectScreen(
     modifier: Modifier = Modifier,
     onLevelSelected: (Int) -> Unit = {},
     levelSelectViewModel: LevelSelectViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    loginSession: UserSession
+    loginSession: UserSession,
 ) {
     val lsUiState by levelSelectViewModel.uiState.collectAsState()
     levelSelectViewModel.setUserName(loginSession.username)
 
+    val activity = (LocalContext.current as? Activity)
+    BackHandler {
+        println("BackHandler")
+        activity?.finish()
+    }
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top
