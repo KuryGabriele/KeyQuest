@@ -7,7 +7,8 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [GameLevel::class, UserSession::class], version = 1, exportSchema = false)
 abstract class KeyquestDatabase: RoomDatabase() {
-    abstract fun UserSessionDao(): UserSessionDao
+    abstract fun userSessionDao(): UserSessionDao
+    abstract fun gameLevelDao(): GameLevelDao
 
     companion object {
         @Volatile
