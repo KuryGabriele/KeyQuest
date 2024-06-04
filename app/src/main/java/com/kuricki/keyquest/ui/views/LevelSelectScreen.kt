@@ -23,16 +23,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kuricki.keyquest.R
-import com.kuricki.keyquest.data.GameLevel
 import com.kuricki.keyquest.data.LevelSelectViewModel
-import com.kuricki.keyquest.data.LoginSession
+import com.kuricki.keyquest.db.GameLevel
+import com.kuricki.keyquest.db.UserSession
 
 @Composable
 fun LevelSelectScreen(
     modifier: Modifier = Modifier,
     onLevelSelected: (Int) -> Unit = {},
     levelSelectViewModel: LevelSelectViewModel = viewModel(),
-    loginSession: LoginSession
+    loginSession: UserSession
 ) {
     val lsUiState by levelSelectViewModel.uiState.collectAsState()
     levelSelectViewModel.setUserName(loginSession.username)

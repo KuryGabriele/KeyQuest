@@ -2,6 +2,7 @@ package com.kuricki.keyquest.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kuricki.keyquest.db.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -56,7 +57,7 @@ class LoginViewModel: ViewModel() {
      * Authenticate the user and set the session.
      * @param onLoginSuccess The callback function to be called when the login is successful
      */
-    fun loginUser(onLoginSuccess: (a: LoginSession) -> Unit) {
+    fun loginUser(onLoginSuccess: (a: UserSession) -> Unit) {
         println("Login", )
         val u = _uiState.value.usrName
         val p = _uiState.value.psw

@@ -18,7 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.kuricki.keyquest.data.LoginSession
+import com.kuricki.keyquest.db.UserSession
 import com.kuricki.keyquest.ui.views.GameScreen
 import com.kuricki.keyquest.ui.views.LevelSelectScreen
 import com.kuricki.keyquest.ui.views.LoginScreen
@@ -40,7 +40,7 @@ fun KeyQuestApp(
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
-    var loginSession: LoginSession? = null
+    var loginSession: UserSession? = null
 
     //scaffolding for the router
     Scaffold(){

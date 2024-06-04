@@ -2,6 +2,7 @@ package com.kuricki.keyquest.data
 
 import android.media.midi.MidiDeviceInfo
 import android.media.midi.MidiOutputPort
+import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.midiStuff.MyMidiReceiver
 
 data class GameScreenUiState(

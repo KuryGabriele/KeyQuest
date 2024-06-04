@@ -1,6 +1,7 @@
 package com.kuricki.keyquest.data
 
 import androidx.lifecycle.ViewModel
+import com.kuricki.keyquest.db.GameLevel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,8 +46,9 @@ class LevelSelectViewModel: ViewModel() {
         val l = _uiState.value.levels
         val i = l.indexOfFirst { it.id == _id }
         //update the list
-        l[i].currentScore = _currentScore
-        l[i].bestScore = _bestScore
+        //TODO update the db
+        //l[i].currentScore = _currentScore
+        //l[i].bestScore = _bestScore
 
         setLevels(l)
     }

@@ -1,5 +1,7 @@
 package com.kuricki.keyquest.data
 
+import com.kuricki.keyquest.db.GameLevel
+
 data class LevelSelectUiState(
     val userName: String = "Kury",
     val levels: MutableList<GameLevel> = (mutableListOf(
