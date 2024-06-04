@@ -43,7 +43,7 @@ fun LevelSelectScreen(
 
     val activity = (LocalContext.current as? Activity)
     BackHandler {
-        println("BackHandler")
+        println("Back pressed")
         activity?.finish()
     }
     Column(

@@ -26,11 +26,11 @@ import com.kuricki.keyquest.ui.views.LoginScreen
 /**
  * Enum class for all the screens in the app
  */
-enum class KeyQuestScreens() {
-    Login(), //login screen
-    LevelSelect(), //level selection screen
-    Game(), // game screen
-    Summary() // summary screen with score
+enum class KeyQuestScreens {
+    Login, //login screen
+    LevelSelect, //level selection screen
+    Game, // game screen
+    Summary // summary screen with score
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -43,7 +43,7 @@ fun KeyQuestApp(
     var loginSession: UserSession? = null
 
     //scaffolding for the router
-    Scaffold(){
+    Scaffold{
         innerPadding ->
         NavHost(
             navController = navController,
@@ -90,7 +90,10 @@ fun KeyQuestApp(
                 (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
                 GameScreen(
                     midiManager = midiManager,
-                    modifier = Modifier.fillMaxHeight()
+                    modifier = Modifier.fillMaxHeight(),
+                    onBack = {
+                        navController.navigate(KeyQuestScreens.LevelSelect.name)
+                    }
                 )
             }
         }
