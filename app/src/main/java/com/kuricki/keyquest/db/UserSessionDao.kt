@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserSessionDao {
@@ -16,9 +17,9 @@ interface UserSessionDao {
 
     // Get specific session by id
     @Query("SELECT * FROM UserSession WHERE id = :userId")
-    suspend fun getSession(userId: Int): UserSession?
+    fun getSession(userId: Int): Flow<UserSession?>
 
     // Get the first session, should be the only one in the table
     @Query("SELECT * FROM UserSession ORDER BY id ASC LIMIT 1")
-    suspend fun getFirstSession(): UserSession?
+    fun getFirstSession(): Flow<UserSession?>
 }
