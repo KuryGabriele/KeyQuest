@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameLevelDao {
@@ -16,9 +17,9 @@ interface GameLevelDao {
 
     //get all game levels
     @Query("SELECT * FROM GameLevel")
-    suspend fun getAll(): List<GameLevel>
+    fun getAll(): Flow<List<GameLevel>>
 
     //get specific game level
     @Query("SELECT * FROM GameLevel WHERE id = :id")
-    suspend fun getById(id: Int): GameLevel?
+    fun getById(id: Int): Flow<GameLevel?>
 }
