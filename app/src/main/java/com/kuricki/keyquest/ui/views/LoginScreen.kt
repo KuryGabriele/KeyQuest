@@ -44,7 +44,7 @@ class LoginScreen: Screen {
         val loginUiState by loginViewModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
-        (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 
         //Check if there is a session saved
         if(loginUiState.checkSession) {
