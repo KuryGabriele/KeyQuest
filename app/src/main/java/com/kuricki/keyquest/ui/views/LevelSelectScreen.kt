@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -25,47 +28,53 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.screen.Screen
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.AppViewModelProvider
 import com.kuricki.keyquest.data.LevelSelectViewModel
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.db.UserSession
 
-@Composable
-fun LevelSelectScreen(
-    modifier: Modifier = Modifier,
-    onLevelSelected: (Int) -> Unit = {},
-    levelSelectViewModel: LevelSelectViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    loginSession: UserSession,
-) {
-    val lsUiState by levelSelectViewModel.uiState.collectAsState()
-    levelSelectViewModel.setUserName(loginSession.username)
+data class LevelSelectScreen(val loginSession: UserSession): Screen {
+    @Composable
+    override fun Content() {
+        val levelSelectViewModel: LevelSelectViewModel = viewModel(factory = AppViewModelProvider.Factory)
+        val modifier = Modifier
+        val lsUiState by levelSelectViewModel.uiState.collectAsState()
+        levelSelectViewModel.setUserName(loginSession.username)
 
-    val activity = (LocalContext.current as? Activity)
-    BackHandler {
-        println("Back pressed")
-        activity?.finish()
-    }
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Text(
-            text = stringResource(R.string.greeting) + " " + lsUiState.userName,
-            style = MaterialTheme.typography.displayLarge,
-            modifier = modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(16.dp)
-        )
-        Spacer(modifier = Modifier.height(32.dp))
+        val onLevelSelected: (Int) -> Unit = { id ->
+            println("Level selected: $id")
+        }
+
+        val activity = (LocalContext.current as? Activity)
+        BackHandler {
+            println("Back pressed")
+            activity?.finish()
+        }
         Column(
             modifier = modifier
-                .align(Alignment.CenterHorizontally),
-            verticalArrangement = Arrangement.Center,
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Top
         ) {
-            lsUiState.levels.forEach { lvl ->
-                LevelCard(modifier, onLevelSelected, levelSelectViewModel, lvl)
-                Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.greeting) + " " + lsUiState.userName,
+                style = MaterialTheme.typography.displayLarge,
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(16.dp)
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            Column(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                lsUiState.levels.forEach { lvl ->
+                    LevelCard(modifier, onLevelSelected, levelSelectViewModel, lvl)
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
     }
