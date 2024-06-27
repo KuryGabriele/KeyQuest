@@ -1,10 +1,12 @@
 package com.kuricki.keyquest.ui.views
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.media.midi.MidiManager
 import android.os.Build
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,20 +36,21 @@ import com.kuricki.keyquest.data.GameScreenViewModel
 import com.kuricki.keyquest.ui.components.MusicSheet
 import com.kuricki.keyquest.ui.components.RoundedButtonWithIcon
 
-data class GameScreen(val midiManager: MidiManager, val gameScreenViewModel: GameScreenViewModel, val onBack: () -> Unit): Screen {
+data class GameScreen(val midiManager: MidiManager): Screen {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @Composable
     override fun Content() {
         val modifier = Modifier
+        val gameScreenViewModel: GameScreenViewModel = viewModel()
         gameScreenViewModel.start(midiManager)
         val gUiState by gameScreenViewModel.uiState.collectAsState()
-        BackHandler {
-            println("Back pressed")
-            onBack()
-        }
+        val context = LocalContext.current
+        (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
         ) {
             Row(
                 modifier = Modifier
