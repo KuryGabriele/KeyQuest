@@ -1,5 +1,7 @@
 package com.kuricki.keyquest.ui.views
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,6 +43,8 @@ class LoginScreen: Screen {
         val loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
         val loginUiState by loginViewModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
+        val context = LocalContext.current
+        (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
         //Check if there is a session saved
         if(loginUiState.checkSession) {
