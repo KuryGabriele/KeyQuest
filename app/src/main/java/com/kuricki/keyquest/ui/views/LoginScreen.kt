@@ -1,5 +1,6 @@
 package com.kuricki.keyquest.ui.views
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,12 +54,14 @@ class LoginScreen: Screen {
 
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(
                 text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(32.dp)
