@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.media.midi.MidiManager
 import android.os.Build
+import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -52,9 +53,15 @@ data class GameScreen(val midiManager: MidiManager): Screen {
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
         DisposableEffect(Unit) {
+            // Keep the screen on
             (context as? Activity)?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            // Hide the status bar
+            (context as? Activity)?.window?.insetsController?.hide(WindowInsets.Type.statusBars())
             onDispose {
+                // Remove the keep screen on flag
                 (context as? Activity)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                // Show the status bar
+                (context as? Activity)?.window?.insetsController?.show(WindowInsets.Type.statusBars())
             }
         }
 
@@ -92,8 +99,8 @@ data class GameScreen(val midiManager: MidiManager): Screen {
             //Piano roll
             PianoRoll(
                 modifier = Modifier,
-                startNote = "C3",
-                endNote = "E4",
+                startNote = "C4",
+                endNote = "F5",
                 pressedNotes = gUiState.currPressedKeys,
                 highlightedNotes = mutableSetOf()
             )
