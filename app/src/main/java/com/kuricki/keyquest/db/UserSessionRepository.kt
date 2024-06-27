@@ -12,4 +12,9 @@ interface UserSessionRepository {
      * Set a user session
      */
     suspend fun setSession(session: UserSession)
+
+    /**
+     * Delete a user session
+     */
+    suspend fun delete(session: UserSession)
 }

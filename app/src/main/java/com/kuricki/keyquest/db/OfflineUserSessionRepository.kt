@@ -9,5 +9,6 @@ class OfflineUserSessionRepository(private val usDao: UserSessionDao): UserSessi
 
     override suspend fun setSession(session: UserSession) = usDao.insert(session)
 
+    override suspend fun delete(session: UserSession) = usDao.delete(session)
 }
 
