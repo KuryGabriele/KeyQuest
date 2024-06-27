@@ -41,9 +41,14 @@ class LoginScreen: Screen {
         val navigator = LocalNavigator.currentOrThrow
 
         //Check if there is a session saved
-        loginViewModel.checkSession { session ->
-            //Replace the login screen
-            navigator.replaceAll(LevelSelectScreen(loginSession = session))
+        if(loginUiState.checkSession) {
+            loginViewModel.checkSession { session ->
+                //Replace the login screen
+                session?.let {
+                    println(session)
+                    navigator.replaceAll(LevelSelectScreen(loginSession = session))
+                }
+            }
         }
 
         Column(
