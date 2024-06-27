@@ -1,6 +1,9 @@
 package com.kuricki.keyquest.ui.views
 
 import android.app.Activity
+import android.content.Context
+import android.content.pm.ActivityInfo
+import android.media.midi.MidiManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.AppViewModelProvider
 import com.kuricki.keyquest.data.LevelSelectViewModel
@@ -42,9 +47,14 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
         val modifier = Modifier
         val lsUiState by levelSelectViewModel.uiState.collectAsState()
         levelSelectViewModel.setUserName(loginSession.username)
+        val navigator = LocalNavigator.currentOrThrow
+        val context = LocalContext.current
+        (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
         val onLevelSelected: (Int) -> Unit = { id ->
             println("Level selected: $id")
+            val midiManager: MidiManager = context.getSystemService(Context.MIDI_SERVICE) as MidiManager
+            navigator.push(GameScreen(midiManager = midiManager))
         }
 
         val activity = (LocalContext.current as? Activity)
