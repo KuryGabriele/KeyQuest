@@ -27,13 +27,13 @@ fun MusicSheet (
     modifier: Modifier = Modifier,
     notes: List<DisplayNote> = listOf(
         DisplayNote(
-            pitch = "C4",
+            pitch = "C♯4",
             positionY = 300f,
             lined = true,
             alteration = 1
         ),
         DisplayNote(
-            pitch = "E5♭",
+            pitch = "E♭5",
             positionY = 75f,
             lined = false,
             alteration = -1

@@ -53,9 +53,11 @@ fun PianoRoll(
     //Piano roll layout
     Box(
         modifier = modifier
+            //Fix width so tha I can center it
             .width(naturalNotesCount * (options.keyWidthScaled + options.keyMarginScaled).roundToInt().dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
+        // starting position of keys
         var xPos = options.keyMarginScaled/2
         // foreach notes
         notes.forEachIndexed { index, note ->
