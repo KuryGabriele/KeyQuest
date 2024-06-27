@@ -102,13 +102,34 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
         }
     }
 
-    fun checkSession(a: (UserSession) -> Unit) {
+    fun checkSession(a: (UserSession?) -> Unit) {
         viewModelScope.launch {
+            //update checkSession
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkSession = false
+                )
+            }
+            //Check is there a session saved
             val s = repository.getSession().collect {
                 if (it != null) {
-                    //TODO check if session is still valid
-                    a(it)
+                    //if there is a session, check if it is still valid
+                    try {
+                        val response = KeyQuestApi.retrofitService.validateSession(it.token)
+                        a(response)
+                        //update checkSession
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                checkSession = true
+                            )
+                        }
+                    } catch (e: retrofit2.HttpException) {
+                        //if the session is invalid, delete it
+                        repository.delete(it)
+                        a(null)
+                    }
                 } else {
+                    //if there is no session
                     println("No session")
                 }
             }
