@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.media.midi.MidiManager
 import android.os.Build
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,6 +37,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.GameScreenViewModel
 import com.kuricki.keyquest.ui.components.MusicSheet
+import com.kuricki.keyquest.ui.components.PianoRoll
 import com.kuricki.keyquest.ui.components.RoundedButtonWithIcon
 
 data class GameScreen(val midiManager: MidiManager): Screen {
@@ -47,14 +51,23 @@ data class GameScreen(val midiManager: MidiManager): Screen {
         val context = LocalContext.current
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
+        DisposableEffect(Unit) {
+            (context as? Activity)?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            onDispose {
+                (context as? Activity)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
+
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp)
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .height(32.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Top bar buttons and info
@@ -64,25 +77,26 @@ data class GameScreen(val midiManager: MidiManager): Screen {
                     icon = Icons.Default.Settings,
                     contentDescription = "Midi settings"
                 )
-                //Pressed keys text
-                Text(
-                    text = "Keys: " + gUiState.currPressedKeys,
-                    style = MaterialTheme.typography.displayMedium,
-                    modifier = modifier
-                        .padding(16.dp)
-                )
             }
             //Music sheet card
             Card (
                 modifier = Modifier
                     .padding(16.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .align(Alignment.CenterHorizontally),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 MusicSheet()
             }
             //Piano roll
-            //PianoRoll(startNote = "C3", endNote = "G4", pressedNotes = gUiState.currPressedKeys, highlightedNotes = mutableSetOf())
+            PianoRoll(
+                modifier = Modifier,
+                startNote = "C3",
+                endNote = "E4",
+                pressedNotes = gUiState.currPressedKeys,
+                highlightedNotes = mutableSetOf()
+            )
         }
         if(gUiState.midiSelectionOpen) {
             //if midi selection is open, show it
@@ -123,7 +137,8 @@ fun MidiDeviceSelection(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
@@ -131,7 +146,8 @@ fun MidiDeviceSelection(
                 Text(
                     modifier = Modifier.padding(16.dp),
                     text = stringResource(R.string.selMidiDevice),
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
                 )
                 // Display a list of MIDI devices
                 midiDevices.forEach { midiDevice ->
@@ -153,9 +169,21 @@ fun MidiDeviceSelection(
                         // Display the name of the MIDI device
                         Text(
                             text = midiDevice.properties.getString("product", "asd"),
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.secondary
                         )
                     }
+                }
+
+                if(midiDevices.isEmpty()) {
+                    //if no devices are found, show a toast
+                    Text(
+                        modifier = Modifier
+                            .padding(16.dp),
+                        text = stringResource(R.string.noMidiDevices),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
                 }
             }
         }
