@@ -26,6 +26,9 @@ interface KeyQuestApiService {
 
     @POST("auth/login") //Get login session from api
     suspend fun getLoginSession(@Body b: JsonObject): UserSession
+
+    @GET("auth/validate")
+    suspend fun validateSession(@Header("Authorization") authorization: String): UserSession
 }
 
 object KeyQuestApi {
