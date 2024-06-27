@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -24,77 +25,78 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.screen.Screen
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.AppViewModelProvider
 import com.kuricki.keyquest.data.LoginViewModel
 import com.kuricki.keyquest.db.UserSession
 
-@Composable
-fun LoginScreen(
-    modifier: Modifier = Modifier,
-    onLoginSuccess: (session: UserSession) -> Unit = {},
-    loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
-){
-    val loginUiState by loginViewModel.uiState.collectAsState()
-    loginViewModel.checkSession(onLoginSuccess)
-    Column(
-        modifier = Modifier,
-        verticalArrangement = Arrangement.SpaceAround
-    ) {
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.displayLarge,
-            modifier = modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(32.dp)
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        Column (
+data class LoginScreen(val onLoginSuccess: (session:UserSession) -> Unit): Screen {
+    @Composable
+    override fun Content() {
+        val modifier = Modifier
+        val loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
+        val loginUiState by loginViewModel.uiState.collectAsState()
+        Column(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            verticalArrangement = Arrangement.Bottom,
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceAround
         ) {
-            TextField(
-                value = loginUiState.usrName,
-                onValueChange = { loginViewModel.setUsrName(it) },
-                label = { Text(stringResource(R.string.username)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, autoCorrect = false, imeAction = ImeAction.Next),
-                singleLine = true,
-                isError = loginUiState.error != null,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            TextField(
-                value = loginUiState.psw,
-                onValueChange = { loginViewModel.setPsw(it) },
-                label = { Text(stringResource(R.string.password)) },
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { loginViewModel.loginUser(onLoginSuccess) }) ,
-                singleLine = true,
-                isError = loginUiState.error != null,
-                supportingText = {
-                    if (loginUiState.error != null) {
-                        Text(loginUiState.error.toString())
-                    }
-                },
-            )
-            Spacer(modifier = Modifier.height(64.dp))
-            Row(
+            Text(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.displayLarge,
                 modifier = modifier
                     .align(Alignment.CenterHorizontally)
-            ){
-                Button(
+                    .padding(32.dp)
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            Column (
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                TextField(
+                    value = loginUiState.usrName,
+                    onValueChange = { loginViewModel.setUsrName(it) },
+                    label = { Text(stringResource(R.string.username)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, autoCorrect = false, imeAction = ImeAction.Next),
+                    singleLine = true,
+                    isError = loginUiState.error != null,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                TextField(
+                    value = loginUiState.psw,
+                    onValueChange = { loginViewModel.setPsw(it) },
+                    label = { Text(stringResource(R.string.password)) },
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { loginViewModel.loginUser(onLoginSuccess) }) ,
+                    singleLine = true,
+                    isError = loginUiState.error != null,
+                    supportingText = {
+                        if (loginUiState.error != null) {
+                            Text(loginUiState.error.toString())
+                        }
+                    },
+                )
+                Spacer(modifier = Modifier.height(64.dp))
+                Row(
                     modifier = modifier
-                        .width(150.dp)
-                        .height(50.dp),
-                    onClick = { loginViewModel.loginUser(onLoginSuccess) }) {
-                    Text(
-                        stringResource(R.string.login),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+                        .align(Alignment.CenterHorizontally)
+                ){
+                    Button(
+                        modifier = modifier
+                            .width(150.dp)
+                            .height(50.dp),
+                        onClick = { loginViewModel.loginUser(onLoginSuccess) }) {
+                        Text(
+                            stringResource(R.string.login),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
                 }
-            }
 
+            }
         }
     }
 }
