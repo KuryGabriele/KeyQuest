@@ -26,17 +26,26 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.AppViewModelProvider
 import com.kuricki.keyquest.data.LoginViewModel
-import com.kuricki.keyquest.db.UserSession
 
-data class LoginScreen(val onLoginSuccess: (session:UserSession) -> Unit): Screen {
+class LoginScreen: Screen {
     @Composable
     override fun Content() {
         val modifier = Modifier
         val loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
         val loginUiState by loginViewModel.uiState.collectAsState()
+        val navigator = LocalNavigator.currentOrThrow
+
+        //Check if there is a session saved
+        loginViewModel.checkSession { session ->
+            //Replace the login screen
+            navigator.replaceAll(LevelSelectScreen(loginSession = session))
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -70,7 +79,12 @@ data class LoginScreen(val onLoginSuccess: (session:UserSession) -> Unit): Scree
                     label = { Text(stringResource(R.string.password)) },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = { loginViewModel.loginUser(onLoginSuccess) }) ,
+                    keyboardActions = KeyboardActions(onDone = {
+                        loginViewModel.loginUser { session ->
+                            //Replace the login screen
+                            navigator.replaceAll(LevelSelectScreen(loginSession = session))
+                        }
+                    }),
                     singleLine = true,
                     isError = loginUiState.error != null,
                     supportingText = {
@@ -88,7 +102,12 @@ data class LoginScreen(val onLoginSuccess: (session:UserSession) -> Unit): Scree
                         modifier = modifier
                             .width(150.dp)
                             .height(50.dp),
-                        onClick = { loginViewModel.loginUser(onLoginSuccess) }) {
+                        onClick = {
+                            loginViewModel.loginUser { session ->
+                                //Replace the login screen
+                                navigator.replaceAll(LevelSelectScreen(loginSession = session))
+                            }
+                        }) {
                         Text(
                             stringResource(R.string.login),
                             style = MaterialTheme.typography.bodyLarge
