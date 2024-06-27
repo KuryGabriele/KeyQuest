@@ -3,7 +3,6 @@ package com.kuricki.keyquest.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
@@ -14,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
 import com.kuricki.keyquest.midiStuff.MidiToNote
 import com.kuricki.keyquest.midiStuff.NoteToMidi
@@ -53,7 +53,7 @@ fun PianoRoll(
     //Piano roll layout
     Box(
         modifier = modifier
-            .fillMaxWidth()
+            .width(naturalNotesCount * (options.keyWidthScaled + options.keyMarginScaled).roundToInt().dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
         var xPos = options.keyMarginScaled/2

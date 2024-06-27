@@ -98,7 +98,8 @@ data class GameScreen(val midiManager: MidiManager): Screen {
             }
             //Piano roll
             PianoRoll(
-                modifier = Modifier,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
                 startNote = "C4",
                 endNote = "F5",
                 pressedNotes = gUiState.currPressedKeys,
