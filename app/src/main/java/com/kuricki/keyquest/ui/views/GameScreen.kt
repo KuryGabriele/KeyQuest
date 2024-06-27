@@ -28,72 +28,71 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.screen.Screen
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.GameScreenViewModel
 import com.kuricki.keyquest.ui.components.MusicSheet
 import com.kuricki.keyquest.ui.components.RoundedButtonWithIcon
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Composable
-fun GameScreen(
-    modifier: Modifier = Modifier,
-    midiManager: MidiManager,
-    gameScreenViewModel: GameScreenViewModel = viewModel(),
-    onBack: () -> Unit
-) {
-    gameScreenViewModel.start(midiManager)
-    val gUiState by gameScreenViewModel.uiState.collectAsState()
-    BackHandler {
-        println("Back pressed")
-        onBack()
-    }
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+data class GameScreen(val midiManager: MidiManager, val gameScreenViewModel: GameScreenViewModel, val onBack: () -> Unit): Screen {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @Composable
+    override fun Content() {
+        val modifier = Modifier
+        gameScreenViewModel.start(midiManager)
+        val gUiState by gameScreenViewModel.uiState.collectAsState()
+        BackHandler {
+            println("Back pressed")
+            onBack()
+        }
+        Column(
+            modifier = modifier
+                .fillMaxSize()
         ) {
-            // Top bar buttons and info
-            //Settings button
-            RoundedButtonWithIcon(
-                onClick = { gameScreenViewModel.midiSelectionOpen(true) },
-                icon = Icons.Default.Settings,
-                contentDescription = "Midi settings"
-            )
-            //Pressed keys text
-            Text(
-                text = "Keys: " + gUiState.currPressedKeys,
-                style = MaterialTheme.typography.displayMedium,
-                modifier = modifier
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Top bar buttons and info
+                //Settings button
+                RoundedButtonWithIcon(
+                    onClick = { gameScreenViewModel.midiSelectionOpen(true) },
+                    icon = Icons.Default.Settings,
+                    contentDescription = "Midi settings"
+                )
+                //Pressed keys text
+                Text(
+                    text = "Keys: " + gUiState.currPressedKeys,
+                    style = MaterialTheme.typography.displayMedium,
+                    modifier = modifier
+                        .padding(16.dp)
+                )
+            }
+            //Music sheet card
+            Card (
+                modifier = Modifier
                     .padding(16.dp)
-            )
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                MusicSheet()
+            }
+            //Piano roll
+            //PianoRoll(startNote = "C3", endNote = "G4", pressedNotes = gUiState.currPressedKeys, highlightedNotes = mutableSetOf())
         }
-        //Music sheet card
-        Card (
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            MusicSheet()
+        if(gUiState.midiSelectionOpen) {
+            //if midi selection is open, show it
+            MidiDeviceSelection()
         }
-        //Piano roll
-        //PianoRoll(startNote = "C3", endNote = "G4", pressedNotes = gUiState.currPressedKeys, highlightedNotes = mutableSetOf())
-    }
-    if(gUiState.midiSelectionOpen) {
-        //if midi selection is open, show it
-        MidiDeviceSelection()
-    }
 
-    if(gUiState.newDeviceConnected) {
-        //if a new device is connected, show a toast
-        val newDevice = gUiState.currMidiDevice!!.properties.getString("product", "Null")
-        Toast.makeText(LocalContext.current, "Connected to: $newDevice", Toast.LENGTH_SHORT).show()
-        //reset the flag
-        gameScreenViewModel.deviceConnectedNotificationShown()
+        if(gUiState.newDeviceConnected) {
+            //if a new device is connected, show a toast
+            val newDevice = gUiState.currMidiDevice!!.properties.getString("product", "Null")
+            Toast.makeText(LocalContext.current, "Connected to: $newDevice", Toast.LENGTH_SHORT).show()
+            //reset the flag
+            gameScreenViewModel.deviceConnectedNotificationShown()
+        }
     }
 }
 
