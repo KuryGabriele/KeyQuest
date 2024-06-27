@@ -1,7 +1,7 @@
 package com.kuricki.keyquest.ui.views
 
 import android.app.Activity
-import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,19 +48,17 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
         }
 
         val activity = (LocalContext.current as? Activity)
-        BackHandler {
-            println("Back pressed")
-            activity?.finish()
-        }
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .background(MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.Top
         ) {
             Text(
                 text = stringResource(R.string.greeting) + " " + lsUiState.userName,
                 style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(16.dp)
