@@ -57,7 +57,6 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
             navigator.push(GameScreen(midiManager = midiManager))
         }
 
-        val activity = (LocalContext.current as? Activity)
         Column(
             modifier = modifier
                 .fillMaxSize()
