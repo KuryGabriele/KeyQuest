@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -24,6 +25,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -127,7 +130,29 @@ class LoginScreen: Screen {
                         )
                     }
                 }
-
+                //No account
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        stringResource(R.string.noAccount),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                    ClickableText(
+                        text = AnnotatedString(stringResource(R.string.signUp)),
+                        style = TextStyle(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                        ),
+                        modifier = modifier
+                            .padding(horizontal = 8.dp),
+                        onClick = {
+                            navigator.push(RegisterScreen())
+                        }
+                    )
+                }
             }
         }
     }
