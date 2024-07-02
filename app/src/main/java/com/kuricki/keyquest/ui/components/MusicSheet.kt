@@ -15,11 +15,54 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
 data class DisplayNote(
-    val pitch: String,
-    val positionY: Float,
-    val lined: Boolean,
-    val alteration: Int = 0 // 0 = no alteration, 1 = sharp, -1 = flat
+    val pitch: String
 )
+
+fun pitchToHeight(pitch: String, options: MusicSheetOptions): Float {
+    //remove alterations
+    val pitch = pitch.replace("♯", "").replace("♭", "")
+
+    val note = pitch[0] //get che note
+    val octave = pitch[1].toString().toInt() //get the octave
+
+    //calculate the height
+    val height = when(octave) {
+        3 -> 12
+        4 -> 6
+        5 -> -1
+        else -> 6
+    }
+    val offset = when(note) {
+        'A' -> 1
+        'G' -> 2
+        'F' -> 3
+        'E' -> 4
+        'D' -> 5
+        'C' -> 6
+        'B' -> 0
+        else -> 1
+    }
+
+    return (height + offset)*options.notesHeightOffsetScaled
+}
+
+fun isNoteLined(pitch: String, options: MusicSheetOptions): Int {
+    val pitch = pitch.replace("♯", "").replace("♭", "")
+    if(pitch == "C4" || pitch == "A5") {
+        return 1
+    }
+
+    if(pitch == "A3") {
+        //Draw two lines one across and one above
+        return 3
+    }
+
+    if(pitch == "B3") {
+        return 2
+    }
+
+    return 0;
+}
 
 @Preview
 @Composable
@@ -27,22 +70,13 @@ fun MusicSheet (
     modifier: Modifier = Modifier,
     notes: List<DisplayNote> = listOf(
         DisplayNote(
-            pitch = "C♯4",
-            positionY = 300f,
-            lined = true,
-            alteration = 1
+            pitch = "B3"
         ),
         DisplayNote(
-            pitch = "E♭5",
-            positionY = 75f,
-            lined = false,
-            alteration = -1
+            pitch = "E♭5"
         ),
         DisplayNote(
-            pitch = "D5",
-            positionY = 100f,
-            lined = false,
-            alteration = 0
+            pitch = "D5"
         )),
     options: MusicSheetOptions = MusicSheetOptions()
 ) {
@@ -67,39 +101,75 @@ fun MusicSheet (
             // foreach note
             var noteOffset = options.notesOffsetScaled //position of the notes
             for(note in notes) {
+                //get the height of the note
+                val positionY = pitchToHeight(note.pitch, options)
+                //get the alteration
+                var alteration = 0;
+                if(note.pitch.contains("♯")) {
+                    alteration = 1
+                } else if(note.pitch.contains("♭")) {
+                    alteration = -1
+                }
+
+                //line status for note
+                val lined = isNoteLined(note.pitch, options)
+
                 //draw it as a circle
                 drawCircle(
                     color = options.notesColor,
                     radius = options.notesRadiusScaled,
-                    center = Offset(noteOffset, note.positionY)
+                    center = Offset(noteOffset, positionY)
                 )
-                if(note.lined) {
+                if(lined == 1) {
                     //draw horizontal line across note
                     drawLine(
                         color = options.notesColor,
-                        start = Offset(noteOffset-options.notesLinedLengthScaled, note.positionY),
-                        end = Offset(noteOffset+options.notesLinedLengthScaled, note.positionY),
+                        start = Offset(noteOffset-options.notesLinedLengthScaled, positionY),
+                        end = Offset(noteOffset+options.notesLinedLengthScaled, positionY),
                         strokeWidth = options.notesLinedWidthScaled
+                    )
+                } else if(lined == 2) {
+                    //draw line above note
+                    drawLine(
+                        color = options.notesColor,
+                        start = Offset(noteOffset-options.notesLinedLengthScaled, positionY-options.notesHeightOffsetScaled),
+                        end = Offset(noteOffset+options.notesLinedLengthScaled, positionY-options.notesHeightOffsetScaled),
+                        strokeWidth = options.notesLinedWidthScaled/2
+                    )
+                } else if(lined == 3) {
+                    //draw line across note
+                    drawLine(
+                        color = options.notesColor,
+                        start = Offset(noteOffset-options.notesLinedLengthScaled, positionY),
+                        end = Offset(noteOffset+options.notesLinedLengthScaled, positionY),
+                        strokeWidth = options.notesLinedWidthScaled
+                    )
+                    //draw helping line
+                    drawLine(
+                        color = options.notesColor,
+                        start = Offset(noteOffset-options.notesLinedLengthScaled, positionY-options.pentagramLinesSpacingScaled+15),
+                        end = Offset(noteOffset+options.notesLinedLengthScaled, positionY-options.pentagramLinesSpacingScaled+15),
+                        strokeWidth = options.notesLinedWidthScaled/2
                     )
                 }
 
-                if(note.alteration == 1) {
+                if(alteration == 1) {
                     // draw sharp text
                     drawContext.canvas.nativeCanvas.drawText (
                         "♯",
                         noteOffset - options.notesRadiusScaled - options.alterationSharpOffsetScaled,
-                        note.positionY,
+                        positionY,
                         Paint().asFrameworkPaint().apply {
                             color = Color.Black.toArgb()
                             textSize = options.alterationSharpFontSizeScaled.toPx()
                         }
                     )
-                } else if(note.alteration == -1) {
+                } else if(alteration == -1) {
                     // draw flat text
                     drawContext.canvas.nativeCanvas.drawText (
                         "♭",
                         noteOffset - options.notesRadiusScaled-options.alterationFlatOffsetScaled,
-                        note.positionY,
+                        positionY,
                         Paint().asFrameworkPaint().apply {
                             color = Color.Black.toArgb()
                             textSize = options.alterationFlatFontSizeScaled.toPx()
@@ -109,20 +179,20 @@ fun MusicSheet (
 
                 // check if vertical line can be drawn up
                 val verticalLineOffset = noteOffset + options.verticalLineOffsetScaled
-                if(note.positionY < options.maxHeightForVerticalLineUpScaled) {
+                if(positionY < options.maxHeightForVerticalLineUpScaled) {
                     // draw vertical line downwards from note
                     drawLine(
                         color = options.notesColor,
-                        start = Offset(verticalLineOffset, note.positionY),
-                        end = Offset(verticalLineOffset, note.positionY + options.verticalLineLengthScaled),
+                        start = Offset(verticalLineOffset, positionY),
+                        end = Offset(verticalLineOffset, positionY + options.verticalLineLengthScaled),
                         strokeWidth = options.verticalLineWidthScaled
                     )
                 } else {
                     //draw vertical line upwards from note
                     drawLine(
                         color = options.notesColor,
-                        start = Offset(verticalLineOffset, note.positionY),
-                        end = Offset(verticalLineOffset, note.positionY - options.verticalLineLengthScaled),
+                        start = Offset(verticalLineOffset, positionY),
+                        end = Offset(verticalLineOffset, positionY - options.verticalLineLengthScaled),
                         strokeWidth = options.verticalLineWidthScaled
                     )
                 }
