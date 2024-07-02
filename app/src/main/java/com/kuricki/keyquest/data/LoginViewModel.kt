@@ -202,6 +202,23 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
         }
     }
 
+    fun logout(a: () -> Unit) {
+        viewModelScope.launch {
+            val s = repository.getSession().collect {
+                if (it != null) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            checkSession = false
+                        )
+                    }
+
+                    repository.delete(it)
+                    a()
+                }
+            }
+        }
+    }
+
 
     /**
      * Displays the error message in login screen.
