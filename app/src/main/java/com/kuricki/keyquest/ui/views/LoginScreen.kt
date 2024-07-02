@@ -16,13 +16,15 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -63,12 +65,26 @@ class LoginScreen: Screen {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+                .background(
+                    Brush.linearGradient(
+                        0.0f to MaterialTheme.colorScheme.secondaryContainer,
+                        500.0f to MaterialTheme.colorScheme.tertiaryContainer,
+                    )
+                ),
             verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(
                 text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.displayLarge,
+                style = TextStyle(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary,
+                            MaterialTheme.colorScheme.tertiary
+                        ),
+                        tileMode = TileMode.Mirror
+                    ),
+                    fontSize = MaterialTheme.typography.displayLarge.fontSize
+                ),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = modifier
                     .align(Alignment.CenterHorizontally)
@@ -81,7 +97,7 @@ class LoginScreen: Screen {
                 verticalArrangement = Arrangement.Bottom,
             ) {
                 //Username
-                TextField(
+                OutlinedTextField(
                     value = loginUiState.usrName,
                     onValueChange = { loginViewModel.setUsrName(it) },
                     label = { Text(stringResource(R.string.username)) },
@@ -91,7 +107,7 @@ class LoginScreen: Screen {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 //Password
-                TextField(
+                OutlinedTextField(
                     value = loginUiState.psw,
                     onValueChange = { loginViewModel.setPsw(it) },
                     label = { Text(stringResource(R.string.password)) },
