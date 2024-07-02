@@ -2,6 +2,7 @@
     <string name="app_name">KeyQuest</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="repeatPassword">Repeat password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="or">Or</string>
@@ -12,4 +13,7 @@
     <string name="hard">Hard</string>
     <string name="selMidiDevice">Select MIDI device</string>
     <string name="noMidiDevices">No MIDI devices found!</string>
+    <string name="noAccount">Don\'t have an account?</string>
+    <string name="haveAccount">Already have an account?</string>
+    <string name="signUp">Sign Up</string>
 </resources>
