@@ -35,6 +35,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -69,6 +70,13 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
         }
 
         Scaffold(
+            modifier = Modifier
+                .background(
+                    Brush.linearGradient(
+                        0.0f to MaterialTheme.colorScheme.secondaryContainer,
+                        500.0f to MaterialTheme.colorScheme.tertiaryContainer,
+                    )
+                ),
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
@@ -108,8 +116,13 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
                 modifier = modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(ip),
+                    .padding(ip)
+                    .background(
+                        Brush.linearGradient(
+                            0.0f to MaterialTheme.colorScheme.secondaryContainer,
+                            500.0f to MaterialTheme.colorScheme.tertiaryContainer,
+                        )
+                    ),
                 verticalArrangement = Arrangement.Top
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
