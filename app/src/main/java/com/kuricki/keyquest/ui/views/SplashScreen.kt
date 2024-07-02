@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -56,7 +57,12 @@ class SplashScreen: Screen {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+                .background(
+                    Brush.linearGradient(
+                        0.0f to MaterialTheme.colorScheme.secondaryContainer,
+                        500.0f to MaterialTheme.colorScheme.tertiaryContainer,
+                    )
+                ),
             verticalArrangement = Arrangement.SpaceAround
         ) {
             AnimatedVisibility(
