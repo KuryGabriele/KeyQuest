@@ -54,6 +54,21 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
         }
     }
 
+    fun setPsw2(password: String) {
+        if(password.contains(' ')) {
+            setError("Password cannot contain spaces")
+            password.trim(' ')
+        } else {
+            setError(null)
+        }
+
+        _uiState.update{ currentState ->
+            currentState.copy(
+                psw2 = password,
+            )
+        }
+    }
+
     /**
      * Authenticate the user and set the session.
      * @param onLoginSuccess The callback function to be called when the login is successful
@@ -82,6 +97,56 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
                         "hash" to parseToJsonElement(p)
                 )
                 val a = KeyQuestApi.retrofitService.getLoginSession(
+                    JsonObject(json)
+                )
+
+                //save session in repository
+                repository.setSession(a)
+
+                //callback
+                onLoginSuccess(a)
+            } catch (e: retrofit2.HttpException) {
+                if(e.code() == 406) {
+                    // Wrong username or password
+                    setError("Wrong username or password")
+                }
+            } catch (e: Exception) {
+                println(e)
+                setError("Login failed")
+            }
+        }
+    }
+
+    fun registerUser(onLoginSuccess: (a: UserSession) -> Unit) {
+        println("Register")
+        val u = _uiState.value.usrName
+        val p = _uiState.value.psw
+        val p2 = _uiState.value.psw2
+
+        if(u.isEmpty() || p.isEmpty() || p2.isEmpty()) {
+            setError("Username or password cannot be empty")
+            return
+        }
+
+        // Check for invalid chars in username or password
+        if(u.contains(' ') || p.contains(' ') || p2.contains(' ')) {
+            setError("Username and password cannot contain spaces")
+            return
+        }
+
+        if(p != p2) {
+            setError("Passwords do not match")
+            return
+        }
+
+        // Make the API call
+        viewModelScope.launch {
+            try {
+                val json = mapOf(
+                    "username" to parseToJsonElement(u),
+                    "hash" to parseToJsonElement(p)
+                )
+                val a = KeyQuestApi.retrofitService.registerUser(
                     JsonObject(json)
                 )
 
