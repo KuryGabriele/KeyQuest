@@ -32,6 +32,7 @@ fun pitchToHeight(pitch: String, options: MusicSheetOptions): Float {
         5 -> -1
         else -> 6
     }
+    //calculate the offset
     val offset = when(note) {
         'A' -> 1
         'G' -> 2
@@ -49,6 +50,7 @@ fun pitchToHeight(pitch: String, options: MusicSheetOptions): Float {
 fun isNoteLined(pitch: String, options: MusicSheetOptions): Int {
     val pitch = pitch.replace("♯", "").replace("♭", "")
     if(pitch == "C4" || pitch == "A5") {
+        //Draw a line across
         return 1
     }
 
@@ -58,9 +60,11 @@ fun isNoteLined(pitch: String, options: MusicSheetOptions): Int {
     }
 
     if(pitch == "B3") {
+        //Draw a line above
         return 2
     }
 
+    //no lines
     return 0;
 }
 
