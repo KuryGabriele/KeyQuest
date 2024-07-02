@@ -141,7 +141,8 @@ class LoginScreen: Screen {
                 ) {
                     Text(
                         stringResource(R.string.noAccount),
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.secondary
                     )
                     ClickableText(
                         text = AnnotatedString(stringResource(R.string.signUp)),

@@ -139,7 +139,7 @@ class RegisterScreen: Screen {
                         }) {
                         Text(
                             stringResource(R.string.register),
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
                         )
                     }
                 }
@@ -151,7 +151,8 @@ class RegisterScreen: Screen {
                 ) {
                     Text(
                         stringResource(R.string.haveAccount),
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.secondary
                     )
                     ClickableText(
                         text = AnnotatedString(stringResource(R.string.login)),
