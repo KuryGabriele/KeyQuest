@@ -153,6 +153,9 @@ class LoginScreen: Screen {
                         modifier = modifier
                             .padding(horizontal = 8.dp),
                         onClick = {
+                            //clear errors
+                            loginViewModel.setError(null)
+                            //navigate to register
                             navigator.push(RegisterScreen())
                         }
                     )

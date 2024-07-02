@@ -163,6 +163,9 @@ class RegisterScreen: Screen {
                         modifier = modifier
                             .padding(horizontal = 8.dp),
                         onClick = {
+                            //clear errors
+                            loginViewModel.setError(null)
+                            //navigate back to login
                             navigator.pop()
                         }
                     )
