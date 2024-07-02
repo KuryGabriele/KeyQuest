@@ -80,6 +80,7 @@ class LoginScreen: Screen {
                     .align(Alignment.CenterHorizontally),
                 verticalArrangement = Arrangement.Bottom,
             ) {
+                //Username
                 TextField(
                     value = loginUiState.usrName,
                     onValueChange = { loginViewModel.setUsrName(it) },
@@ -89,6 +90,7 @@ class LoginScreen: Screen {
                     isError = loginUiState.error != null,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+                //Password
                 TextField(
                     value = loginUiState.psw,
                     onValueChange = { loginViewModel.setPsw(it) },
@@ -114,6 +116,7 @@ class LoginScreen: Screen {
                     modifier = modifier
                         .align(Alignment.CenterHorizontally)
                 ){
+                    //Login button
                     Button(
                         modifier = modifier
                             .width(150.dp)

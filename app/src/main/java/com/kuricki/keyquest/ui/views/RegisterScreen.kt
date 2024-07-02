@@ -109,7 +109,7 @@ class RegisterScreen: Screen {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
                         loginViewModel.registerUser { session ->
-                            //Replace the login screen
+                            //Replace the register screen
                             navigator.replaceAll(LevelSelectScreen(loginSession = session))
                         }
                     }),
@@ -126,6 +126,7 @@ class RegisterScreen: Screen {
                     modifier = modifier
                         .align(Alignment.CenterHorizontally)
                 ){
+                    //Register button
                     Button(
                         modifier = modifier
                             .width(150.dp)
@@ -142,7 +143,7 @@ class RegisterScreen: Screen {
                         )
                     }
                 }
-                //No account
+                //Already has an account
                 Row(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
