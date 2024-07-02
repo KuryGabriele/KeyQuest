@@ -196,6 +196,7 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
                 } else {
                     //if there is no session
                     println("No session")
+                    a(null)
                 }
             }
         }
