@@ -55,7 +55,7 @@ fun PianoRoll(
         modifier = modifier
             //Fix width so tha I can center it
             .width(naturalNotesCount * (options.keyWidthScaled + options.keyMarginScaled).roundToInt().dp)
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.Transparent)
     ) {
         // starting position of keys
         var xPos = options.keyMarginScaled/2
