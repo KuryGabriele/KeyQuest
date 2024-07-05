@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KeyQuest</string>
+    <string name="username">Nome utente</string>
+    <string name="password">Password</string>
+    <string name="repeatPassword">Ripeti password</string>
+    <string name="login">Accedi</string>
+    <string name="register">Registrati</string>
+    <string name="or">O</string>
+    <string name="greeting">Ciao</string>
+    <string name="highScore">Punteggio migliore:</string>
+    <string name="easy">Facile</string>
+    <string name="medium">Intermedio</string>
+    <string name="hard">Difficile</string>
+    <string name="selMidiDevice">Seleziona dispositivo MIDI</string>
+    <string name="noMidiDevices">Nessun dispositivo midi trovato!</string>
+    <string name="noAccount">Non hai un account?</string>
+    <string name="haveAccount">Hai già un account?</string>
+    <string name="signUp">Registrati</string>
+</resources>
