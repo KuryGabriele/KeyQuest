@@ -7,7 +7,7 @@ import com.kuricki.keyquest.midiStuff.MyMidiReceiver
 
 data class GameScreenUiState(
     val userName: String = "Kury", //user nickname
-    val currentLevel: GameLevel = GameLevel(0, "Lvl1: Ode to joy!", 0,0, 0), //current level
+    val currentLevel: GameLevel = GameLevel(0, "Lvl1: Ode to joy!", 0,0, ""), //current level
     val currMidiDevice: MidiDeviceInfo? = null, //currently opened midi device
     val midiPort: MidiOutputPort? = null, //currently open midi port
     val mmr: MyMidiReceiver = MyMidiReceiver(), //midi receiver and listener

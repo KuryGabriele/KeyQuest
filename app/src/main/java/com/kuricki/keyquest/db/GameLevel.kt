@@ -10,6 +10,6 @@ data class GameLevel(
     @PrimaryKey val id: Int,
     val displayName: String,
     val difficulty: Int,
-    val currentScore: Int,
-    val bestScore: Int
+    val bestScore: Int,
+    val notes: String
 )
