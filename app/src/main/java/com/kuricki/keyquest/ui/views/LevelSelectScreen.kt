@@ -101,6 +101,9 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
                         val loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
                         IconButton(
                             onClick = {
+                                //Delete levels from db
+                                levelSelectViewModel.deleteLevels()
+                                //Logout
                                 loginViewModel.logout {
                                     //Replace the login screen
                                     navigator.replaceAll(LoginScreen())

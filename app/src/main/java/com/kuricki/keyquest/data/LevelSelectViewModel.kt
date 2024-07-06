@@ -87,4 +87,15 @@ class LevelSelectViewModel(private val repository: GameLevelRepository): ViewMod
 
         setLevels(l)
     }
+
+    fun deleteLevels() {
+        viewModelScope.launch {
+            repository.deleteAllLevels()
+            _uiState.update{ currentState ->
+                currentState.copy(
+                    levels = mutableListOf()
+                )
+            }
+        }
+    }
 }
