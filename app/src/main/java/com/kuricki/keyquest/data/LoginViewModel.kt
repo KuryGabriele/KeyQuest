@@ -102,6 +102,7 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
 
                 //save session in repository
                 repository.setSession(a)
+                KeyQuestApi.setToken(a.token)
 
                 //callback
                 onLoginSuccess(a)
@@ -181,6 +182,7 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
                     //if there is a session, check if it is still valid
                     try {
                         val response = KeyQuestApi.retrofitService.validateSession(it.token)
+                        KeyQuestApi.setToken(it.token)
                         a(response)
                         //update checkSession
                         _uiState.update { currentState ->
