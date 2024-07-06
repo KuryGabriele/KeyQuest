@@ -1,7 +1,6 @@
 package com.kuricki.keyquest.db
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 
 class OfflineGameLevelRepository(private val glDao: GameLevelDao): GameLevelRepository {
     override suspend fun getAllLevels(): Flow<List<GameLevel>> {
@@ -16,11 +15,5 @@ class OfflineGameLevelRepository(private val glDao: GameLevelDao): GameLevelRepo
 
     override suspend fun deleteLevel(level: GameLevel) = glDao.delete(level)
 
-    override suspend fun deleteAllLevels() {
-        //get all the levels and delete them
-        val levels = getAllLevels().first()
-        for (level in levels) {
-            deleteLevel(level)
-        }
-    }
+    override suspend fun deleteAllLevels() = glDao.deleteAll()
 }

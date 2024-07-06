@@ -15,6 +15,9 @@ interface GameLevelDao {
     @Delete(GameLevel::class)
     suspend fun delete(gameLevel: GameLevel)
 
+    @Query("DELETE FROM GameLevel")
+    suspend fun deleteAll()
+
     //get all game levels
     @Query("SELECT * FROM GameLevel")
     fun getAll(): Flow<List<GameLevel>>
