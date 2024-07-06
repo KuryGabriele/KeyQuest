@@ -66,7 +66,9 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        levelSelectViewModel.getLevels()
+        if(lsUiState.getLevels){
+            levelSelectViewModel.getLevels()
+        }
         val onLevelSelected: (Int) -> Unit = { id ->
             println("Level selected: $id")
             val midiManager: MidiManager = context.getSystemService(Context.MIDI_SERVICE) as MidiManager
@@ -101,10 +103,10 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
                         val loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
                         IconButton(
                             onClick = {
-                                //Delete levels from db
-                                levelSelectViewModel.deleteLevels()
                                 //Logout
                                 loginViewModel.logout {
+                                    //Delete levels from db
+                                    levelSelectViewModel.deleteLevels()
                                     //Replace the login screen
                                     navigator.replaceAll(LoginScreen())
                                 }
