@@ -11,5 +11,6 @@ data class LevelSelectUiState(
         GameLevel(1, "Lvl2: Ode to joy!", 0,0, ""),
         GameLevel(0, "Lvl1: Ode to joy!", 0,0, ""),
         GameLevel(1, "Lvl2: Ode to joy!", 0,0, "")
-    ))
+    )),
+    val getLevels: Boolean = true
 )
