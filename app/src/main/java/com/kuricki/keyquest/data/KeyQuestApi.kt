@@ -38,4 +38,15 @@ object KeyQuestApi {
     //expose retrofit service
     val retrofitService : KeyQuestApiService by lazy {
         retrofit.create(KeyQuestApiService::class.java) }
+
+    private var token: String = ""
+
+    fun setToken(t: String) {
+        token = t
+    }
+
+    fun getToken(): String {
+        return token
+    }
+
 }
