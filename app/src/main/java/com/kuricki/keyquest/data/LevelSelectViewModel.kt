@@ -17,7 +17,6 @@ class LevelSelectViewModel(private val repository: GameLevelRepository): ViewMod
     fun getLevels(){
         //TODO get levels from db, if not there get them from api
         viewModelScope.launch {
-
             repository.getAllLevels().collect {
                 //if there are levels in db, use them
                 if(it.isNotEmpty()){
@@ -42,6 +41,13 @@ class LevelSelectViewModel(private val repository: GameLevelRepository): ViewMod
                         println(e)
                     }
                 }
+            }
+
+            //update ui
+            _uiState.update { currentState ->
+                currentState.copy(
+                    getLevels = false
+                )
             }
         }
     }
@@ -89,13 +95,14 @@ class LevelSelectViewModel(private val repository: GameLevelRepository): ViewMod
     }
 
     fun deleteLevels() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                getLevels = false
+            )
+        }
+
         viewModelScope.launch {
             repository.deleteAllLevels()
-            _uiState.update{ currentState ->
-                currentState.copy(
-                    levels = mutableListOf()
-                )
-            }
         }
     }
 }
