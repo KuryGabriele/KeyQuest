@@ -1,16 +1,50 @@
 package com.kuricki.keyquest.data
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.db.GameLevelRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class LevelSelectViewModel(private val repository: GameLevelRepository): ViewModel() {
     private val _uiState = MutableStateFlow(LevelSelectUiState())
     val uiState: StateFlow<LevelSelectUiState> = _uiState.asStateFlow()
+
+    fun getLevels(){
+        //TODO get levels from db, if not there get them from api
+        viewModelScope.launch {
+
+            repository.getAllLevels().collect {
+                //if there are levels in db, use them
+                if(it.isNotEmpty()){
+                    println("Got levels from db")
+                    setLevels(it.toMutableList())
+                } else {
+                    //if there are no levels in db, get them from api
+                    println("Got levels from api")
+                    try{
+                        //get token
+                        val t = KeyQuestApi.getToken()
+                        //get levels from api
+                        val l = KeyQuestApi.retrofitService.getLevels(t)
+                        //update ui
+                        setLevels(l)
+                        //Add to db
+                        l.forEach{ level ->
+                            repository.saveLevel(level)
+                        }
+
+                    } catch (e: Exception){
+                        println(e)
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Set the username

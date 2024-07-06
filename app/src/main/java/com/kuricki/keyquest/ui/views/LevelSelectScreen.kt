@@ -42,6 +42,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kuricki.keyquest.R
@@ -52,6 +54,8 @@ import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.db.UserSession
 
 data class LevelSelectScreen(val loginSession: UserSession): Screen {
+    override val key: ScreenKey = uniqueScreenKey
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -62,12 +66,14 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-
+        levelSelectViewModel.getLevels()
         val onLevelSelected: (Int) -> Unit = { id ->
             println("Level selected: $id")
             val midiManager: MidiManager = context.getSystemService(Context.MIDI_SERVICE) as MidiManager
             navigator.push(GameScreen(midiManager = midiManager))
         }
+
+
 
         Scaffold(
             modifier = Modifier
