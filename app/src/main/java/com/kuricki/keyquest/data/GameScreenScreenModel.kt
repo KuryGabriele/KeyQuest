@@ -92,7 +92,7 @@ class GameScreenScreenModel(val midiManager: MidiManager, val lvl: GameLevel): S
             )
         }
 
-        if(newKeys.contains(uiState.value.keysToPress[0])) {
+        if(uiState.value.keysToPress.isNotEmpty() && newKeys.contains(uiState.value.keysToPress[0])) {
             //correct key pressed
             _uiState.update {
                 it.copy(
@@ -114,9 +114,11 @@ class GameScreenScreenModel(val midiManager: MidiManager, val lvl: GameLevel): S
                     //update score
                     score += ceil(100/newNotes.size.toDouble()).toInt()
                 }
+
+                score = min(score, 100)
                 _uiState.update {
                     it.copy(
-                        currentScore = min(score, 100),
+                        currentScore = score,
                         wrongNotePressed = false
                     )
                 }
@@ -160,6 +162,7 @@ class GameScreenScreenModel(val midiManager: MidiManager, val lvl: GameLevel): S
                     //wrong key pressed
                     _uiState.update {
                         it.copy(
+                            errors = it.errors + 1,
                             wrongNotePressed = true
                         )
                     }
