@@ -40,7 +40,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
@@ -49,7 +48,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kuricki.keyquest.KeyquestApplication
 import com.kuricki.keyquest.R
-import com.kuricki.keyquest.data.AppViewModelProvider
 import com.kuricki.keyquest.data.LevelSelectScreenModel
 import com.kuricki.keyquest.data.LoginViewModel
 import com.kuricki.keyquest.db.GameLevel
@@ -104,7 +102,8 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
                     modifier = modifier
                         .fillMaxWidth(),
                     actions = {
-                        val loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
+                        val loginRepo = (context.applicationContext as KeyquestApplication).container.userSessionRepository
+                        val loginViewModel = rememberScreenModel(tag = "login") { LoginViewModel(loginRepo) }
                         IconButton(
                             onClick = {
                                 //Logout
