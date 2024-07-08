@@ -10,13 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-
-data class DisplayNote(
-    val pitch: String
-)
 
 fun pitchToHeight(pitch: String, options: MusicSheetOptions): Float {
     //remove alterations
@@ -68,20 +63,10 @@ fun isNoteLined(pitch: String, options: MusicSheetOptions): Int {
     return 0;
 }
 
-@Preview
 @Composable
 fun MusicSheet (
     modifier: Modifier = Modifier,
-    notes: List<DisplayNote> = listOf(
-        DisplayNote(
-            pitch = "B3"
-        ),
-        DisplayNote(
-            pitch = "E♭5"
-        ),
-        DisplayNote(
-            pitch = "D5"
-        )),
+    notes: MutableList<String>,
     options: MusicSheetOptions = MusicSheetOptions()
 ) {
     Surface(
@@ -106,17 +91,17 @@ fun MusicSheet (
             var noteOffset = options.notesOffsetScaled //position of the notes
             for(note in notes) {
                 //get the height of the note
-                val positionY = pitchToHeight(note.pitch, options)
+                val positionY = pitchToHeight(note, options)
                 //get the alteration
                 var alteration = 0;
-                if(note.pitch.contains("♯")) {
+                if(note.contains("♯")) {
                     alteration = 1
-                } else if(note.pitch.contains("♭")) {
+                } else if(note.contains("♭")) {
                     alteration = -1
                 }
 
                 //line status for note
-                val lined = isNoteLined(note.pitch, options)
+                val lined = isNoteLined(note, options)
 
                 //draw it as a circle
                 drawCircle(
@@ -203,7 +188,7 @@ fun MusicSheet (
 
                 // draw pitch text
                 drawContext.canvas.nativeCanvas.drawText (
-                    note.pitch,
+                    note,
                     noteOffset - options.notesRadiusScaled,
                     options.pitchNotesHeightScaled,
                     Paint().asFrameworkPaint().apply {
