@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json.Default.parseToJsonElement
 import kotlinx.serialization.json.JsonObject
 
-class LoginViewModel(private val repository: UserSessionRepository): ScreenModel {
+class LoginScreenModel(private val repository: UserSessionRepository): ScreenModel {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 

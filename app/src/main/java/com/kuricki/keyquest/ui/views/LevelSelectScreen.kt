@@ -49,7 +49,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kuricki.keyquest.KeyquestApplication
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.LevelSelectScreenModel
-import com.kuricki.keyquest.data.LoginViewModel
+import com.kuricki.keyquest.data.LoginScreenModel
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.db.UserSession
 
@@ -103,11 +103,11 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
                         .fillMaxWidth(),
                     actions = {
                         val loginRepo = (context.applicationContext as KeyquestApplication).container.userSessionRepository
-                        val loginViewModel = rememberScreenModel(tag = "login") { LoginViewModel(loginRepo) }
+                        val loginScreenModel = rememberScreenModel(tag = "login") { LoginScreenModel(loginRepo) }
                         IconButton(
                             onClick = {
                                 //Logout
-                                loginViewModel.logout {
+                                loginScreenModel.logout {
                                     //Delete levels from db
                                     levelSelectViewModel.deleteLevels()
                                     //Replace the login screen

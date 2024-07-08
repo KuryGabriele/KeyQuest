@@ -28,7 +28,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kuricki.keyquest.KeyquestApplication
 import com.kuricki.keyquest.R
-import com.kuricki.keyquest.data.LoginViewModel
+import com.kuricki.keyquest.data.LoginScreenModel
 
 class SplashScreen: Screen {
     @Composable
@@ -36,15 +36,15 @@ class SplashScreen: Screen {
         val context = LocalContext.current
         val modifier = Modifier
         val r = (context.applicationContext as KeyquestApplication).container.userSessionRepository
-        val loginViewModel = rememberScreenModel(tag = "login") { LoginViewModel(r) }
-        val loginUiState by loginViewModel.uiState.collectAsState()
+        val loginScreenModel = rememberScreenModel(tag = "login") { LoginScreenModel(r) }
+        val loginUiState by loginScreenModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 
         //Check if there is a session saved
         if(loginUiState.checkSession) {
-            loginViewModel.checkSession { session ->
+            loginScreenModel.checkSession { session ->
                 session?.let {
                     //If session is not null, replace the login screen
                     navigator.replaceAll(LevelSelectScreen(loginSession = session))

@@ -39,7 +39,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kuricki.keyquest.KeyquestApplication
 import com.kuricki.keyquest.R
-import com.kuricki.keyquest.data.LoginViewModel
+import com.kuricki.keyquest.data.LoginScreenModel
 
 class RegisterScreen: Screen {
     @Composable
@@ -47,14 +47,14 @@ class RegisterScreen: Screen {
         val modifier = Modifier
         val context = LocalContext.current
         val r = (context.applicationContext as KeyquestApplication).container.userSessionRepository
-        val loginViewModel = rememberScreenModel(tag = "login") { LoginViewModel(r) }
-        val loginUiState by loginViewModel.uiState.collectAsState()
+        val loginScreenModel = rememberScreenModel(tag = "login") { LoginScreenModel(r) }
+        val loginUiState by loginScreenModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         //Check if there is a session saved
         if(loginUiState.checkSession) {
-            loginViewModel.checkSession { session ->
+            loginScreenModel.checkSession { session ->
                 //Replace the login screen
                 session?.let {
                     println(session)
@@ -100,7 +100,7 @@ class RegisterScreen: Screen {
                 //Username
                 OutlinedTextField(
                     value = loginUiState.usrName,
-                    onValueChange = { loginViewModel.setUsrName(it) },
+                    onValueChange = { loginScreenModel.setUsrName(it) },
                     label = { Text(stringResource(R.string.username)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, autoCorrect = false, imeAction = ImeAction.Next),
                     singleLine = true,
@@ -110,7 +110,7 @@ class RegisterScreen: Screen {
                 //Password
                 OutlinedTextField(
                     value = loginUiState.psw,
-                    onValueChange = { loginViewModel.setPsw(it) },
+                    onValueChange = { loginScreenModel.setPsw(it) },
                     label = { Text(stringResource(R.string.password)) },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
@@ -121,12 +121,12 @@ class RegisterScreen: Screen {
                 //Repeat password
                 OutlinedTextField(
                     value = loginUiState.psw2,
-                    onValueChange = { loginViewModel.setPsw2(it) },
+                    onValueChange = { loginScreenModel.setPsw2(it) },
                     label = { Text(stringResource(R.string.repeatPassword)) },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
-                        loginViewModel.registerUser { session ->
+                        loginScreenModel.registerUser { session ->
                             //Replace the register screen
                             navigator.replaceAll(LevelSelectScreen(loginSession = session))
                         }
@@ -150,7 +150,7 @@ class RegisterScreen: Screen {
                             .width(150.dp)
                             .height(50.dp),
                         onClick = {
-                            loginViewModel.registerUser { session ->
+                            loginScreenModel.registerUser { session ->
                                 //Go to login
                                 navigator.replaceAll(LevelSelectScreen(loginSession = session))
                             }
@@ -182,7 +182,7 @@ class RegisterScreen: Screen {
                             .padding(horizontal = 8.dp),
                         onClick = {
                             //clear errors
-                            loginViewModel.setError(null)
+                            loginScreenModel.setError(null)
                             //navigate back to login
                             navigator.pop()
                         }

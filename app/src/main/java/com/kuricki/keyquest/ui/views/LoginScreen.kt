@@ -41,7 +41,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kuricki.keyquest.KeyquestApplication
 import com.kuricki.keyquest.R
-import com.kuricki.keyquest.data.LoginViewModel
+import com.kuricki.keyquest.data.LoginScreenModel
 
 class LoginScreen: Screen {
     override val key: ScreenKey = uniqueScreenKey
@@ -51,15 +51,15 @@ class LoginScreen: Screen {
         val context = LocalContext.current
         val modifier = Modifier
         val r = (context.applicationContext as KeyquestApplication).container.userSessionRepository
-        val loginViewModel = rememberScreenModel(tag = "login") { LoginViewModel(r) }
-        val loginUiState by loginViewModel.uiState.collectAsState()
+        val loginScreenModel = rememberScreenModel(tag = "login") { LoginScreenModel(r) }
+        val loginUiState by loginScreenModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 
         //Check if there is a session saved
         if(loginUiState.checkSession) {
-            loginViewModel.checkSession { session ->
+            loginScreenModel.checkSession { session ->
                 //Replace the login screen
                 session?.let {
                     println(session)
@@ -105,7 +105,7 @@ class LoginScreen: Screen {
                 //Username
                 OutlinedTextField(
                     value = loginUiState.usrName,
-                    onValueChange = { loginViewModel.setUsrName(it) },
+                    onValueChange = { loginScreenModel.setUsrName(it) },
                     label = { Text(stringResource(R.string.username)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, autoCorrect = false, imeAction = ImeAction.Next),
                     singleLine = true,
@@ -115,12 +115,12 @@ class LoginScreen: Screen {
                 //Password
                 OutlinedTextField(
                     value = loginUiState.psw,
-                    onValueChange = { loginViewModel.setPsw(it) },
+                    onValueChange = { loginScreenModel.setPsw(it) },
                     label = { Text(stringResource(R.string.password)) },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
-                        loginViewModel.loginUser { session ->
+                        loginScreenModel.loginUser { session ->
                             //Replace the login screen
                             navigator.replaceAll(LevelSelectScreen(loginSession = session))
                         }
@@ -144,7 +144,7 @@ class LoginScreen: Screen {
                             .width(150.dp)
                             .height(50.dp),
                         onClick = {
-                            loginViewModel.loginUser { session ->
+                            loginScreenModel.loginUser { session ->
                                 //Replace the login screen
                                 navigator.replaceAll(LevelSelectScreen(loginSession = session))
                             }
@@ -176,7 +176,7 @@ class LoginScreen: Screen {
                             .padding(horizontal = 8.dp),
                         onClick = {
                             //clear errors
-                            loginViewModel.setError(null)
+                            loginScreenModel.setError(null)
                             //navigate to register
                             navigator.push(RegisterScreen())
                         }
