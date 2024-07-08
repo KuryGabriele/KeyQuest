@@ -22,22 +22,24 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.kuricki.keyquest.KeyquestApplication
 import com.kuricki.keyquest.R
-import com.kuricki.keyquest.data.AppViewModelProvider
 import com.kuricki.keyquest.data.LoginViewModel
 
 class SplashScreen: Screen {
     @Composable
     override fun Content() {
+        val context = LocalContext.current
         val modifier = Modifier
-        val loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
+        val r = (context.applicationContext as KeyquestApplication).container.userSessionRepository
+        val loginViewModel = rememberScreenModel(tag = "login") { LoginViewModel(r) }
         val loginUiState by loginViewModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
-        val context = LocalContext.current
+
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 
         //Check if there is a session saved
