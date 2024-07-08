@@ -63,6 +63,7 @@ class GameScreenScreenModel: ScreenModel {
                     )
                 }
             }
+
             //open new device
             midiManager.openDevice(device, listener, null)
         }
@@ -70,7 +71,8 @@ class GameScreenScreenModel: ScreenModel {
 
     fun getDevices(): MutableSet<MidiDeviceInfo> {
         //fetches all midi devices from the system
-        val devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM) //midi 1.0
+        var devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM) //midi 1.0
+        devices.addAll(midiManager.getDevicesForTransport(MidiManager.TRANSPORT_UNIVERSAL_MIDI_PACKETS)) //midi 2.0
         return devices
     }
 
