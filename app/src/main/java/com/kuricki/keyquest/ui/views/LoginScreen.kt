@@ -33,14 +33,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.kuricki.keyquest.KeyquestApplication
 import com.kuricki.keyquest.R
-import com.kuricki.keyquest.data.AppViewModelProvider
 import com.kuricki.keyquest.data.LoginViewModel
 
 class LoginScreen: Screen {
@@ -48,11 +48,13 @@ class LoginScreen: Screen {
 
     @Composable
     override fun Content() {
+        val context = LocalContext.current
         val modifier = Modifier
-        val loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
+        val r = (context.applicationContext as KeyquestApplication).container.userSessionRepository
+        val loginViewModel = rememberScreenModel(tag = "login") { LoginViewModel(r) }
         val loginUiState by loginViewModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
-        val context = LocalContext.current
+
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 
         //Check if there is a session saved
