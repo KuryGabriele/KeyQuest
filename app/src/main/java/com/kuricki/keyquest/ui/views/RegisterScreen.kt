@@ -47,7 +47,7 @@ class RegisterScreen: Screen {
         val modifier = Modifier
         val context = LocalContext.current
         val r = (context.applicationContext as KeyquestApplication).container.userSessionRepository
-        val loginScreenModel = rememberScreenModel(tag = "login") { LoginScreenModel(r) }
+        val loginScreenModel = rememberScreenModel(tag = "register") { LoginScreenModel(r) }
         val loginUiState by loginScreenModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
