@@ -76,10 +76,10 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
         if(lsUiState.getLevels){
             levelSelectViewModel.getLevels()
         }
-        val onLevelSelected: (Int) -> Unit = { id ->
-            println("Level selected: $id")
+        val onLevelSelected: (GameLevel) -> Unit = { lvl ->
+            println("Level selected: ${lvl.id}")
             val midiManager: MidiManager = context.getSystemService(Context.MIDI_SERVICE) as MidiManager
-            navigator.push(GameScreen(midiManager = midiManager))
+            navigator.push(GameScreen(midiManager = midiManager, lvl))
         }
 
 
@@ -164,7 +164,7 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
 @Composable
 fun LevelCard(
     modifier: Modifier,
-    onLevelSelected: (Int) -> Unit = {},
+    onLevelSelected: (GameLevel) -> Unit = {},
     lvl: GameLevel,
 ) {
     ElevatedCard(
@@ -173,7 +173,7 @@ fun LevelCard(
         ),
         modifier = modifier
             .width(350.dp)
-            .clickable { onLevelSelected(lvl.id) }
+            .clickable { onLevelSelected(lvl) }
     ) {
         Column(
             modifier = Modifier,
@@ -197,14 +197,14 @@ fun LevelCard(
                     color = MaterialTheme.colorScheme.primary,
                 )
                 when (lvl.difficulty) {
-                    0 -> {
+                    1 -> {
                         Text(
                             text = stringResource(R.string.easy),
                             style = MaterialTheme.typography.labelLarge,
                             color = Color.Green,
                         )
                     }
-                    1 -> {
+                    2 -> {
                         Text(
                             text = stringResource(R.string.medium),
                             style = MaterialTheme.typography.labelLarge,
