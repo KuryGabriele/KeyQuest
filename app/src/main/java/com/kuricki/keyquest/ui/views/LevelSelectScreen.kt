@@ -59,14 +59,19 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        val context = LocalContext.current
-        val r = (context.applicationContext as KeyquestApplication).container.gameLevelRepository
-        val levelSelectViewModel = rememberScreenModel { LevelSelectScreenModel(r) }
         val modifier = Modifier
+        val context = LocalContext.current
+        //get the repository
+        val r = (context.applicationContext as KeyquestApplication).container.gameLevelRepository
+        //get the view model
+        val levelSelectViewModel = rememberScreenModel { LevelSelectScreenModel(r) }
+        //get the ui state
         val lsUiState by levelSelectViewModel.uiState.collectAsState()
+        //set the username
         levelSelectViewModel.setUserName(loginSession.username)
         val navigator = LocalNavigator.currentOrThrow
 
+        //Unlock the orientation
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         if(lsUiState.getLevels){
             levelSelectViewModel.getLevels()

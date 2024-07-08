@@ -50,11 +50,15 @@ class LoginScreen: Screen {
     override fun Content() {
         val context = LocalContext.current
         val modifier = Modifier
+        //Get the repository
         val r = (context.applicationContext as KeyquestApplication).container.userSessionRepository
+        //Get the view model
         val loginScreenModel = rememberScreenModel(tag = "login") { LoginScreenModel(r) }
+        //Get the ui state
         val loginUiState by loginScreenModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
+        //Lock the screen orientation to sensor portrait
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 
         //Check if there is a session saved
