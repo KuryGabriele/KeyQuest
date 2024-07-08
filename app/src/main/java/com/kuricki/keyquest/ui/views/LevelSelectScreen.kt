@@ -79,7 +79,7 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
         val onLevelSelected: (GameLevel) -> Unit = { lvl ->
             println("Level selected: ${lvl.id}")
             val midiManager: MidiManager = context.getSystemService(Context.MIDI_SERVICE) as MidiManager
-            navigator.push(GameScreen(midiManager = midiManager, lvl))
+            navigator.push(GameScreen(loginSession, midiManager = midiManager, lvl))
         }
 
 

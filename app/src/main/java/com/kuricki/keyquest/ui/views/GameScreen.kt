@@ -36,25 +36,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.GameScreenScreenModel
 import com.kuricki.keyquest.db.GameLevel
+import com.kuricki.keyquest.db.UserSession
 import com.kuricki.keyquest.ui.components.MusicSheet
 import com.kuricki.keyquest.ui.components.PianoRoll
 import com.kuricki.keyquest.ui.components.RoundedButtonWithIcon
 
-data class GameScreen(val midiManager: MidiManager, val lvl: GameLevel): Screen {
+data class GameScreen(val loginSession: UserSession, val midiManager: MidiManager, val lvl: GameLevel): Screen {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @Composable
     override fun Content() {
         val modifier = Modifier
         //get the view model
         val gameScreenScreenModel = rememberScreenModel { GameScreenScreenModel(midiManager, lvl) }
-        //set the game level
         //get the ui state
         val gUiState by gameScreenScreenModel.uiState.collectAsState()
         val context = LocalContext.current
+        //lock the screen orientation to landscape
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+
+        if(gUiState.levelFinished) {
+            //if level finished, go to level summary screen
+            val navigator = LocalNavigator.currentOrThrow
+            navigator.replaceAll(LevelSummaryScreen(loginSession, gUiState.currentLevel, gUiState.currentScore, gUiState.errors))
+        }
 
         DisposableEffect(Unit) {
             // Keep the screen on
@@ -120,13 +129,15 @@ data class GameScreen(val midiManager: MidiManager, val lvl: GameLevel): Screen 
                 MusicSheet(notes = gUiState.keysToPress.take(20).toMutableList())
             }
             //Piano roll
+
             PianoRoll(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally),
                 startNote = "C4",
                 endNote = "F5",
                 pressedNotes = gUiState.currPressedKeys,
-                highlightedNotes = mutableSetOf(gUiState.keysToPress[0]) //highlight the note to press
+                // highlight notes in the piano roll
+                highlightedNotes = if(gUiState.keysToPress.isEmpty())  mutableSetOf() else mutableSetOf(gUiState.keysToPress[0])
             )
         }
         if(gUiState.midiSelectionOpen) {
