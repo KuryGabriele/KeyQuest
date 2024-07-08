@@ -13,12 +13,6 @@ object AppViewModelProvider {
                 keyquestApplication().container.userSessionRepository
             )
         }
-
-        initializer {
-            LevelSelectViewModel(
-                keyquestApplication().container.gameLevelRepository
-            )
-        }
     }
 }
 

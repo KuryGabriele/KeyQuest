@@ -1,7 +1,7 @@
 package com.kuricki.keyquest.data
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.db.GameLevelRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,13 +10,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class LevelSelectViewModel(private val repository: GameLevelRepository): ViewModel() {
+class LevelSelectScreenModel(private val repository: GameLevelRepository): ScreenModel {
     private val _uiState = MutableStateFlow(LevelSelectUiState())
     val uiState: StateFlow<LevelSelectUiState> = _uiState.asStateFlow()
 
+    init {
+        println("LevelSelectViewModel init")
+    }
+
+    override fun onDispose() {
+        println("LevelSelectViewModel onDispose")
+    }
+
     fun getLevels(){
         //TODO get levels from db, if not there get them from api
-        viewModelScope.launch {
+        screenModelScope.launch {
             repository.getAllLevels().collect {
                 //if there are levels in db, use them
                 if(it.isNotEmpty()){
@@ -101,7 +109,7 @@ class LevelSelectViewModel(private val repository: GameLevelRepository): ViewMod
             )
         }
 
-        viewModelScope.launch {
+        screenModelScope.launch {
             repository.deleteAllLevels()
         }
     }

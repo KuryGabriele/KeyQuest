@@ -41,14 +41,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.kuricki.keyquest.KeyquestApplication
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.AppViewModelProvider
-import com.kuricki.keyquest.data.LevelSelectViewModel
+import com.kuricki.keyquest.data.LevelSelectScreenModel
 import com.kuricki.keyquest.data.LoginViewModel
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.db.UserSession
@@ -59,12 +61,14 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        val levelSelectViewModel: LevelSelectViewModel = viewModel(factory = AppViewModelProvider.Factory)
+        val context = LocalContext.current
+        val r = (context.applicationContext as KeyquestApplication).container.gameLevelRepository
+        val levelSelectViewModel = rememberScreenModel { LevelSelectScreenModel(r) }
         val modifier = Modifier
         val lsUiState by levelSelectViewModel.uiState.collectAsState()
         levelSelectViewModel.setUserName(loginSession.username)
         val navigator = LocalNavigator.currentOrThrow
-        val context = LocalContext.current
+
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         if(lsUiState.getLevels){
             levelSelectViewModel.getLevels()
@@ -143,7 +147,7 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
                     verticalArrangement = Arrangement.Center,
                 ) {
                     lsUiState.levels.forEach { lvl ->
-                        LevelCard(modifier, onLevelSelected, levelSelectViewModel, lvl)
+                        LevelCard(modifier, onLevelSelected, lvl)
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
@@ -157,7 +161,6 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
 fun LevelCard(
     modifier: Modifier,
     onLevelSelected: (Int) -> Unit = {},
-    levelSelectViewModel: LevelSelectViewModel = viewModel(),
     lvl: GameLevel,
 ) {
     ElevatedCard(
