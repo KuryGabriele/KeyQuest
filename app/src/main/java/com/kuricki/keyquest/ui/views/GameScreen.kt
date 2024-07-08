@@ -38,17 +38,20 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.kuricki.keyquest.R
 import com.kuricki.keyquest.data.GameScreenScreenModel
+import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.ui.components.MusicSheet
 import com.kuricki.keyquest.ui.components.PianoRoll
 import com.kuricki.keyquest.ui.components.RoundedButtonWithIcon
 
-data class GameScreen(val midiManager: MidiManager): Screen {
+data class GameScreen(val midiManager: MidiManager, val lvl: GameLevel): Screen {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @Composable
     override fun Content() {
         val modifier = Modifier
-        val gameScreenScreenModel = rememberScreenModel { GameScreenScreenModel() }
-        gameScreenScreenModel.start(midiManager)
+        //get the view model
+        val gameScreenScreenModel = rememberScreenModel { GameScreenScreenModel(midiManager, lvl) }
+        //set the game level
+        //get the ui state
         val gUiState by gameScreenScreenModel.uiState.collectAsState()
         val context = LocalContext.current
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
@@ -81,14 +84,27 @@ data class GameScreen(val midiManager: MidiManager): Screen {
                     .fillMaxWidth()
                     .padding(16.dp)
                     .height(32.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 // Top bar buttons and info
                 //Settings button
                 RoundedButtonWithIcon(
                     onClick = { gameScreenScreenModel.midiSelectionOpen(true) },
                     icon = Icons.Default.Settings,
-                    contentDescription = "Midi settings"
+                    contentDescription = "Midi settings",
+                )
+
+                Text(
+                    text = gUiState.currentLevel.displayName,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+
+                Text(
+                    text = gUiState.currentScore.toString() + "/100",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
             //Music sheet card
@@ -100,7 +116,8 @@ data class GameScreen(val midiManager: MidiManager): Screen {
                     .align(Alignment.CenterHorizontally),
                 shape = RoundedCornerShape(16.dp)
             ) {
-                MusicSheet()
+                //show the music sheet
+                MusicSheet(notes = gUiState.keysToPress.take(20).toMutableList())
             }
             //Piano roll
             PianoRoll(
@@ -109,7 +126,7 @@ data class GameScreen(val midiManager: MidiManager): Screen {
                 startNote = "C4",
                 endNote = "F5",
                 pressedNotes = gUiState.currPressedKeys,
-                highlightedNotes = mutableSetOf()
+                highlightedNotes = mutableSetOf(gUiState.keysToPress[0]) //highlight the note to press
             )
         }
         if(gUiState.midiSelectionOpen) {
