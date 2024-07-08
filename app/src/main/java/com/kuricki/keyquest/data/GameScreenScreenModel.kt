@@ -5,23 +5,20 @@ import android.media.midi.MidiManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import cafe.adriel.voyager.core.model.ScreenModel
+import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.midiStuff.MyMidiReceiver
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.math.ceil
+import kotlin.math.min
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-class GameScreenScreenModel: ScreenModel {
-    private lateinit var midiManager: MidiManager
+class GameScreenScreenModel(val midiManager: MidiManager, val lvl: GameLevel): ScreenModel {
     private val _uiState = MutableStateFlow(GameScreenUiState())
     val uiState = _uiState.asStateFlow()
 
-    /**
-     * Initialize the view model
-     * Will start listening to the midi device if no device is selected
-     */
-    fun start(mm: MidiManager) {
-        midiManager = mm
+    init {
         //if no device selected, f.e. when the app is opened for the first time
         if(_uiState.value.currMidiDevice == null) {
             //select last device
@@ -29,6 +26,13 @@ class GameScreenScreenModel: ScreenModel {
             if(devices.isNotEmpty()) {
                 selectMidiDevice(devices.last())
             }
+        }
+
+        _uiState.update {
+            it.copy(
+                currentLevel = lvl,
+                keysToPress = lvl.notes.split(" ").toMutableList()
+            )
         }
     }
 
@@ -86,6 +90,63 @@ class GameScreenScreenModel: ScreenModel {
             it.copy(
                 currPressedKeys = newKeys
             )
+        }
+
+        if(newKeys.contains(uiState.value.keysToPress[0])) {
+            //correct key pressed
+            _uiState.update {
+                it.copy(
+                    waitForKeyOff = true
+                )
+            }
+        } else {
+            if(_uiState.value.waitForKeyOff) {
+                //key off
+                _uiState.update {
+                    it.copy(
+                        notesDone = it.notesDone + 1
+                    )
+                }
+                //get next notes
+                var newNotes = uiState.value.currentLevel.notes.split(" ").toMutableList()
+                var score = uiState.value.currentScore;
+                if(!uiState.value.wrongNotePressed) {
+                    //update score
+                    score += ceil(100/newNotes.size.toDouble()).toInt()
+                }
+                _uiState.update {
+                    it.copy(
+                        currentScore = min(score, 100),
+                        wrongNotePressed = false
+                    )
+                }
+
+                //get notes done
+                val notesDone = uiState.value.notesDone
+                //remove done notes
+                newNotes = newNotes.drop(notesDone).toMutableList()
+
+
+                if(newNotes.isEmpty()){
+                    //TODO level finished
+                } else {
+                    //reset waitForKeyOff and update ui
+                    _uiState.update {
+                        it.copy(
+                            waitForKeyOff = false,
+                            keysToPress = newNotes,
+                        )
+                    }
+                }
+            } else {
+                if(newKeys.isNotEmpty())
+                //wrong key pressed
+                _uiState.update {
+                    it.copy(
+                        wrongNotePressed = true
+                    )
+                }
+            }
         }
     }
 
