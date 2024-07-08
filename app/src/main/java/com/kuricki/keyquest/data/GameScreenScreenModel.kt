@@ -4,14 +4,14 @@ import android.media.midi.MidiDeviceInfo
 import android.media.midi.MidiManager
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.ViewModel
+import cafe.adriel.voyager.core.model.ScreenModel
 import com.kuricki.keyquest.midiStuff.MyMidiReceiver
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-class GameScreenViewModel: ViewModel() {
+class GameScreenScreenModel: ScreenModel {
     private lateinit var midiManager: MidiManager
     private val _uiState = MutableStateFlow(GameScreenUiState())
     val uiState = _uiState.asStateFlow()
