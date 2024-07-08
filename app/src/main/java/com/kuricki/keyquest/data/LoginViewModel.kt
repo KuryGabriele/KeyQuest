@@ -1,7 +1,7 @@
 package com.kuricki.keyquest.data
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.kuricki.keyquest.db.UserSession
 import com.kuricki.keyquest.db.UserSessionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json.Default.parseToJsonElement
 import kotlinx.serialization.json.JsonObject
 
-class LoginViewModel(private val repository: UserSessionRepository): ViewModel() {
+class LoginViewModel(private val repository: UserSessionRepository): ScreenModel {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
@@ -90,7 +90,7 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
         }
 
         // Make the API call
-        viewModelScope.launch {
+        screenModelScope.launch {
             try {
                 val json = mapOf(
                         "username" to parseToJsonElement(u),
@@ -141,7 +141,7 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
         }
 
         // Make the API call
-        viewModelScope.launch {
+        screenModelScope.launch {
             try {
                 val json = mapOf(
                     "username" to parseToJsonElement(u),
@@ -169,7 +169,7 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
     }
 
     fun checkSession(a: (UserSession?) -> Unit) {
-        viewModelScope.launch {
+        screenModelScope.launch {
             //update checkSession
             _uiState.update { currentState ->
                 currentState.copy(
@@ -205,7 +205,7 @@ class LoginViewModel(private val repository: UserSessionRepository): ViewModel()
     }
 
     fun logout(a: () -> Unit) {
-        viewModelScope.launch {
+        screenModelScope.launch {
             val s = repository.getSession().collect {
                 if (it != null) {
                     _uiState.update { currentState ->
