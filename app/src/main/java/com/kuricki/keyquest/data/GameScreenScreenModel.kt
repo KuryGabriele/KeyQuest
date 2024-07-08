@@ -128,7 +128,24 @@ class GameScreenScreenModel(val midiManager: MidiManager, val lvl: GameLevel): S
 
 
                 if(newNotes.isEmpty()){
-                    //TODO level finished
+                    //level finished
+                    if(score >= uiState.value.currentLevel.bestScore) {
+                        //update best score
+                        _uiState.update {
+                            it.copy(
+                                currentLevel = it.currentLevel.copy(
+                                    bestScore = score
+                                ),
+                            )
+                        }
+                    }
+                    //make level finish
+                    _uiState.update {
+                        it.copy(
+                            levelFinished = true,
+                            keysToPress = mutableListOf(),
+                        )
+                    }
                 } else {
                     //reset waitForKeyOff and update ui
                     _uiState.update {
@@ -139,12 +156,13 @@ class GameScreenScreenModel(val midiManager: MidiManager, val lvl: GameLevel): S
                     }
                 }
             } else {
-                if(newKeys.isNotEmpty())
-                //wrong key pressed
-                _uiState.update {
-                    it.copy(
-                        wrongNotePressed = true
-                    )
+                if(newKeys.isNotEmpty()) {
+                    //wrong key pressed
+                    _uiState.update {
+                        it.copy(
+                            wrongNotePressed = true
+                        )
+                    }
                 }
             }
         }
