@@ -19,4 +19,6 @@ data class GameScreenUiState(
     val waitForKeyOff: Boolean = false,
     val notesDone: Int = 0,
     val wrongNotePressed: Boolean = false,
+    val levelFinished:Boolean = false,
+    val errors: Int = 0,
 )
