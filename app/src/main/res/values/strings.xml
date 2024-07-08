@@ -16,4 +16,9 @@
     <string name="noAccount">Don\'t have an account?</string>
     <string name="haveAccount">Already have an account?</string>
     <string name="signUp">Sign Up</string>
+    <string name="levelSummary">Level summary</string>
+    <string name="yourScore">Your score:</string>
+    <string name="errors">Errors:</string>
+    <string name="retry">Retry</string>
+    <string name="continueGame">Continue</string>
 </resources>
