@@ -34,10 +34,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.kuricki.keyquest.R
-import com.kuricki.keyquest.data.GameScreenViewModel
+import com.kuricki.keyquest.data.GameScreenScreenModel
 import com.kuricki.keyquest.ui.components.MusicSheet
 import com.kuricki.keyquest.ui.components.PianoRoll
 import com.kuricki.keyquest.ui.components.RoundedButtonWithIcon
@@ -47,9 +47,9 @@ data class GameScreen(val midiManager: MidiManager): Screen {
     @Composable
     override fun Content() {
         val modifier = Modifier
-        val gameScreenViewModel: GameScreenViewModel = viewModel()
-        gameScreenViewModel.start(midiManager)
-        val gUiState by gameScreenViewModel.uiState.collectAsState()
+        val gameScreenScreenModel = rememberScreenModel { GameScreenScreenModel() }
+        gameScreenScreenModel.start(midiManager)
+        val gUiState by gameScreenScreenModel.uiState.collectAsState()
         val context = LocalContext.current
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
@@ -86,7 +86,7 @@ data class GameScreen(val midiManager: MidiManager): Screen {
                 // Top bar buttons and info
                 //Settings button
                 RoundedButtonWithIcon(
-                    onClick = { gameScreenViewModel.midiSelectionOpen(true) },
+                    onClick = { gameScreenScreenModel.midiSelectionOpen(true) },
                     icon = Icons.Default.Settings,
                     contentDescription = "Midi settings"
                 )
@@ -114,7 +114,7 @@ data class GameScreen(val midiManager: MidiManager): Screen {
         }
         if(gUiState.midiSelectionOpen) {
             //if midi selection is open, show it
-            MidiDeviceSelection()
+            MidiDeviceSelection(gssm = gameScreenScreenModel)
         }
 
         if(gUiState.newDeviceConnected) {
@@ -122,7 +122,7 @@ data class GameScreen(val midiManager: MidiManager): Screen {
             val newDevice = gUiState.currMidiDevice!!.properties.getString("product", "Null")
             Toast.makeText(LocalContext.current, "Connected to: $newDevice", Toast.LENGTH_SHORT).show()
             //reset the flag
-            gameScreenViewModel.deviceConnectedNotificationShown()
+            gameScreenScreenModel.deviceConnectedNotificationShown()
         }
     }
 }
@@ -134,14 +134,14 @@ data class GameScreen(val midiManager: MidiManager): Screen {
 @Composable
 fun MidiDeviceSelection(
     modifier: Modifier = Modifier,
-    gsvm: GameScreenViewModel = viewModel()
+    gssm: GameScreenScreenModel
 ) {
-    val gUiState by gsvm.uiState.collectAsState()
-    val midiDevices = gsvm.getDevices() //get the devices from the view model
+    val gUiState by gssm.uiState.collectAsState()
+    val midiDevices = gssm.getDevices() //get the devices from the view model
 
     // Create a dialog to display the list of MIDI devices
     Dialog(onDismissRequest = {
-        gsvm.midiSelectionOpen(false)
+        gssm.midiSelectionOpen(false)
     }) {
         // Create a card to display the list of MIDI devices
         Card(
@@ -176,8 +176,8 @@ fun MidiDeviceSelection(
                             onClick = {
                                 //when the radio button is clicked, select the device
                                 //and close the dialog
-                                gsvm.selectMidiDevice(midiDevice)
-                                gsvm.midiSelectionOpen(false)
+                                gssm.selectMidiDevice(midiDevice)
+                                gssm.midiSelectionOpen(false)
                             }
                         )
                         // Display the name of the MIDI device
