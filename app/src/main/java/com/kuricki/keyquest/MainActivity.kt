@@ -8,7 +8,6 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.platform.LocalContext
 import com.kuricki.keyquest.ui.theme.KeyQuestTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,8 +27,6 @@ class MainActivity : ComponentActivity() {
         )
         super.onCreate(savedInstanceState)
         setContent {
-            val context = LocalContext.current
-
             KeyQuestTheme {
                 KeyQuestApp()
             }

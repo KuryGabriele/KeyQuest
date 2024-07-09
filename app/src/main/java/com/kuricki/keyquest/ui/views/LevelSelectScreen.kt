@@ -64,11 +64,9 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
         //get the repository
         val r = (context.applicationContext as KeyquestApplication).container.gameLevelRepository
         //get the view model
-        val levelSelectViewModel = rememberScreenModel { LevelSelectScreenModel(r) }
+        val levelSelectViewModel = rememberScreenModel { LevelSelectScreenModel(loginSession, r) }
         //get the ui state
         val lsUiState by levelSelectViewModel.uiState.collectAsState()
-        //set the username
-        levelSelectViewModel.setUserName(loginSession.username)
         val navigator = LocalNavigator.currentOrThrow
 
         //Unlock the orientation
@@ -79,7 +77,7 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
         val onLevelSelected: (GameLevel) -> Unit = { lvl ->
             println("Level selected: ${lvl.id}")
             val midiManager: MidiManager = context.getSystemService(Context.MIDI_SERVICE) as MidiManager
-            navigator.push(GameScreen(loginSession, midiManager = midiManager, lvl))
+            navigator.push(GameScreen(levelSelectViewModel.loginSession, midiManager = midiManager, lvl))
         }
 
 

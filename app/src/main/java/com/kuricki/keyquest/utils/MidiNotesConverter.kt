@@ -3,7 +3,7 @@ package com.kuricki.keyquest.utils
 /**
  * Converts a midi note to a note name
  */
-fun MidiToNote(midi: Int): String {
+fun midiToNote(midi: Int): String {
     val note = midi % 12
     val octave = midi / 12 - 1
     val noteName = when (note) {
@@ -28,7 +28,7 @@ fun MidiToNote(midi: Int): String {
 /**
  * Converts a note name to a midi note
  */
-fun NoteToMidi(note: String): Int {
+fun noteToMidi(note: String): Int {
     val octave = note[note.length - 1].toString().toInt() //Extract octave
     val n = note.substring(0, note.length - 1) // Extract note without octave
     val code =  when (n) {

@@ -14,7 +14,7 @@ import kotlin.math.ceil
 import kotlin.math.min
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-class GameScreenScreenModel(val midiManager: MidiManager, val lvl: GameLevel): ScreenModel {
+class GameScreenScreenModel(private val midiManager: MidiManager, private val lvl: GameLevel): ScreenModel {
     private val _uiState = MutableStateFlow(GameScreenUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -75,7 +75,7 @@ class GameScreenScreenModel(val midiManager: MidiManager, val lvl: GameLevel): S
 
     fun getDevices(): MutableSet<MidiDeviceInfo> {
         //fetches all midi devices from the system
-        var devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM) //midi 1.0
+        val devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM) //midi 1.0
         devices.addAll(midiManager.getDevicesForTransport(MidiManager.TRANSPORT_UNIVERSAL_MIDI_PACKETS)) //midi 2.0
         return devices
     }
@@ -83,7 +83,7 @@ class GameScreenScreenModel(val midiManager: MidiManager, val lvl: GameLevel): S
     /**
      * Update the current pressed keys, called from the midi receiver
      */
-    fun updateCurrPressedKey(newKeys: MutableSet<String>) {
+    private fun updateCurrPressedKey(newKeys: MutableSet<String>) {
         //Update the state with new keys
         _uiState.update {
             //println("Current keys" + it.currPressedKeys + "\nNew keys: " + newKeys)
@@ -109,7 +109,7 @@ class GameScreenScreenModel(val midiManager: MidiManager, val lvl: GameLevel): S
                 }
                 //get next notes
                 var newNotes = uiState.value.currentLevel.notes.split(" ").toMutableList()
-                var score = uiState.value.currentScore;
+                var score = uiState.value.currentScore
                 if(!uiState.value.wrongNotePressed) {
                     //update score
                     score += ceil(100/newNotes.size.toDouble()).toInt()

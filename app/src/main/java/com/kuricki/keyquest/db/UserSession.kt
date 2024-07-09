@@ -2,7 +2,6 @@ package com.kuricki.keyquest.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
 import kotlinx.serialization.Serializable
 
 @Serializable

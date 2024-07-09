@@ -179,7 +179,7 @@ class LoginScreenModel(private val repository: UserSessionRepository): ScreenMod
                 )
             }
             //Check is there a session saved
-            val s = repository.getSession().collect {
+            repository.getSession().collect {
                 if (it != null) {
                     //if there is a session, check if it is still valid
                     //if device is online
@@ -214,7 +214,7 @@ class LoginScreenModel(private val repository: UserSessionRepository): ScreenMod
 
     fun logout(a: () -> Unit) {
         screenModelScope.launch {
-            val s = repository.getSession().collect {
+            repository.getSession().collect {
                 if (it != null) {
                     _uiState.update { currentState ->
                         currentState.copy(

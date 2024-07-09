@@ -51,7 +51,7 @@ data class LevelSummaryScreen(val loginSession: UserSession, val lvl: GameLevel,
         //get the repository
         val r = (context.applicationContext as KeyquestApplication).container.gameLevelRepository
         //get the view model
-        val summaryScreenModel = rememberScreenModel { SummaryScreenModel(lvl, score, r) }
+        val summaryScreenModel = rememberScreenModel { SummaryScreenModel(loginSession, context, lvl, score, r) }
         //get the navigator
         val navigator = LocalNavigator.currentOrThrow
 

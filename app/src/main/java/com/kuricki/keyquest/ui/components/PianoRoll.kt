@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
-import com.kuricki.keyquest.utils.MidiToNote
-import com.kuricki.keyquest.utils.NoteToMidi
+import com.kuricki.keyquest.utils.midiToNote
+import com.kuricki.keyquest.utils.noteToMidi
 import kotlin.math.roundToInt
 
 // Inspired by github.com/fluxtah/pianoroll
@@ -29,8 +29,8 @@ fun PianoRoll(
     highlightedNotes: MutableSet<String>,
     options: PianoRollOptions = PianoRollOptions()
 ){
-    val midiStartIndex = NoteToMidi(startNote) // starting note
-    val midiEndIndex = NoteToMidi(endNote) // ending note
+    val midiStartIndex = noteToMidi(startNote) // starting note
+    val midiEndIndex = noteToMidi(endNote) // ending note
     val notes: MutableList<String> = mutableListOf() // list of notes
 
     var naturalNotesCount = 0
@@ -38,7 +38,7 @@ fun PianoRoll(
 
     //Populate notes list
     for (i in midiStartIndex..midiEndIndex){
-        val note = MidiToNote(i)
+        val note = midiToNote(i)
         if(note.contains("#")) {
             // if altered note
             alteredNotesCount++

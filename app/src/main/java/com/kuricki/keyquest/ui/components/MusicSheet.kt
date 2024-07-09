@@ -42,7 +42,7 @@ fun pitchToHeight(pitch: String, options: MusicSheetOptions): Float {
     return (height + offset)*options.notesHeightOffsetScaled
 }
 
-fun isNoteLined(pitch: String, options: MusicSheetOptions): Int {
+fun isNoteLined(pitch: String): Int {
     val pitch = pitch.replace("♯", "").replace("♭", "")
     if(pitch == "C4" || pitch == "A5") {
         //Draw a line across
@@ -60,7 +60,7 @@ fun isNoteLined(pitch: String, options: MusicSheetOptions): Int {
     }
 
     //no lines
-    return 0;
+    return 0
 }
 
 @Composable
@@ -93,7 +93,7 @@ fun MusicSheet (
                 //get the height of the note
                 val positionY = pitchToHeight(note, options)
                 //get the alteration
-                var alteration = 0;
+                var alteration = 0
                 if(note.contains("♯")) {
                     alteration = 1
                 } else if(note.contains("♭")) {
@@ -101,7 +101,7 @@ fun MusicSheet (
                 }
 
                 //line status for note
-                val lined = isNoteLined(note, options)
+                val lined = isNoteLined(note)
 
                 //draw it as a circle
                 drawCircle(
@@ -109,37 +109,41 @@ fun MusicSheet (
                     radius = options.notesRadiusScaled,
                     center = Offset(noteOffset, positionY)
                 )
-                if(lined == 1) {
-                    //draw horizontal line across note
-                    drawLine(
-                        color = options.notesColor,
-                        start = Offset(noteOffset-options.notesLinedLengthScaled, positionY),
-                        end = Offset(noteOffset+options.notesLinedLengthScaled, positionY),
-                        strokeWidth = options.notesLinedWidthScaled
-                    )
-                } else if(lined == 2) {
-                    //draw line above note
-                    drawLine(
-                        color = options.notesColor,
-                        start = Offset(noteOffset-options.notesLinedLengthScaled, positionY-options.notesHeightOffsetScaled),
-                        end = Offset(noteOffset+options.notesLinedLengthScaled, positionY-options.notesHeightOffsetScaled),
-                        strokeWidth = options.notesLinedWidthScaled/2
-                    )
-                } else if(lined == 3) {
-                    //draw line across note
-                    drawLine(
-                        color = options.notesColor,
-                        start = Offset(noteOffset-options.notesLinedLengthScaled, positionY),
-                        end = Offset(noteOffset+options.notesLinedLengthScaled, positionY),
-                        strokeWidth = options.notesLinedWidthScaled
-                    )
-                    //draw helping line
-                    drawLine(
-                        color = options.notesColor,
-                        start = Offset(noteOffset-options.notesLinedLengthScaled, positionY-options.pentagramLinesSpacingScaled+15),
-                        end = Offset(noteOffset+options.notesLinedLengthScaled, positionY-options.pentagramLinesSpacingScaled+15),
-                        strokeWidth = options.notesLinedWidthScaled/2
-                    )
+                when (lined) {
+                    1 -> {
+                        //draw horizontal line across note
+                        drawLine(
+                            color = options.notesColor,
+                            start = Offset(noteOffset-options.notesLinedLengthScaled, positionY),
+                            end = Offset(noteOffset+options.notesLinedLengthScaled, positionY),
+                            strokeWidth = options.notesLinedWidthScaled
+                        )
+                    }
+                    2 -> {
+                        //draw line above note
+                        drawLine(
+                            color = options.notesColor,
+                            start = Offset(noteOffset-options.notesLinedLengthScaled, positionY-options.notesHeightOffsetScaled),
+                            end = Offset(noteOffset+options.notesLinedLengthScaled, positionY-options.notesHeightOffsetScaled),
+                            strokeWidth = options.notesLinedWidthScaled/2
+                        )
+                    }
+                    3 -> {
+                        //draw line across note
+                        drawLine(
+                            color = options.notesColor,
+                            start = Offset(noteOffset-options.notesLinedLengthScaled, positionY),
+                            end = Offset(noteOffset+options.notesLinedLengthScaled, positionY),
+                            strokeWidth = options.notesLinedWidthScaled
+                        )
+                        //draw helping line
+                        drawLine(
+                            color = options.notesColor,
+                            start = Offset(noteOffset-options.notesLinedLengthScaled, positionY-options.pentagramLinesSpacingScaled+15),
+                            end = Offset(noteOffset+options.notesLinedLengthScaled, positionY-options.pentagramLinesSpacingScaled+15),
+                            strokeWidth = options.notesLinedWidthScaled/2
+                        )
+                    }
                 }
 
                 if(alteration == 1) {
