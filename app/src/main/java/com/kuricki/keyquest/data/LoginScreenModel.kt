@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json.Default.parseToJsonElement
 import kotlinx.serialization.json.JsonObject
+import java.security.MessageDigest
 
 class LoginScreenModel(private val repository: UserSessionRepository): ScreenModel {
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -78,7 +79,7 @@ class LoginScreenModel(private val repository: UserSessionRepository): ScreenMod
     fun loginUser(onLoginSuccess: (a: UserSession) -> Unit) {
         println("Login")
         val u = _uiState.value.usrName
-        val p = _uiState.value.psw
+        var p = _uiState.value.psw
         // Check for empty username or password
         if(u.isEmpty() || p.isEmpty()) {
             setError("Username or password cannot be empty")
@@ -90,6 +91,11 @@ class LoginScreenModel(private val repository: UserSessionRepository): ScreenMod
             setError("Username and password cannot contain spaces")
             return
         }
+
+        //hash password
+        val md = MessageDigest.getInstance("SHA-256")
+        val digest: ByteArray = md.digest(("$u@$p").toByteArray())
+        p = digest.fold("") { str, it -> str + "%02x".format(it) }
 
         // Make the API call
         screenModelScope.launch {
@@ -123,7 +129,7 @@ class LoginScreenModel(private val repository: UserSessionRepository): ScreenMod
     fun registerUser(onLoginSuccess: (a: UserSession) -> Unit) {
         println("Register")
         val u = _uiState.value.usrName
-        val p = _uiState.value.psw
+        var p = _uiState.value.psw
         val p2 = _uiState.value.psw2
 
         if(u.isEmpty() || p.isEmpty() || p2.isEmpty()) {
@@ -141,6 +147,11 @@ class LoginScreenModel(private val repository: UserSessionRepository): ScreenMod
             setError("Passwords do not match")
             return
         }
+
+        //hash password
+        val md = MessageDigest.getInstance("SHA-256")
+        val digest: ByteArray = md.digest(("$u@$p").toByteArray())
+        p = digest.fold("") { str, it -> str + "%02x".format(it) }
 
         // Make the API call
         screenModelScope.launch {
