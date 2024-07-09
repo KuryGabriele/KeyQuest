@@ -7,6 +7,8 @@ import androidx.annotation.RequiresApi
 import cafe.adriel.voyager.core.model.ScreenModel
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.utils.MyMidiReceiver
+import com.kuricki.keyquest.utils.midiToNote
+import com.kuricki.keyquest.utils.noteToMidi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -28,10 +30,25 @@ class GameScreenScreenModel(private val midiManager: MidiManager, private val lv
             }
         }
 
+        //Piano roll
+        var lowestNote = Int.MAX_VALUE
+        var highestNote = Int.MIN_VALUE
+        lvl.notes.split(" ").forEach {
+            val n = noteToMidi(it)
+            if(n < lowestNote) {
+                lowestNote = n
+            }
+            if(n > highestNote) {
+                highestNote = n
+            }
+        }
+
         _uiState.update {
             it.copy(
                 currentLevel = lvl,
-                keysToPress = lvl.notes.split(" ").toMutableList()
+                keysToPress = lvl.notes.split(" ").toMutableList(),
+                lowestNote = midiToNote(lowestNote),
+                highestNote = midiToNote(highestNote)
             )
         }
     }
