@@ -6,7 +6,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import cafe.adriel.voyager.core.model.ScreenModel
 import com.kuricki.keyquest.db.GameLevel
-import com.kuricki.keyquest.midiStuff.MyMidiReceiver
+import com.kuricki.keyquest.utils.MyMidiReceiver
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

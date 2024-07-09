@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
-import com.kuricki.keyquest.midiStuff.MidiToNote
-import com.kuricki.keyquest.midiStuff.NoteToMidi
+import com.kuricki.keyquest.utils.MidiToNote
+import com.kuricki.keyquest.utils.NoteToMidi
 import kotlin.math.roundToInt
 
 // Inspired by github.com/fluxtah/pianoroll

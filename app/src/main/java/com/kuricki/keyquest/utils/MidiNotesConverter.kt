@@ -1,4 +1,4 @@
-package com.kuricki.keyquest.midiStuff
+package com.kuricki.keyquest.utils
 
 /**
  * Converts a midi note to a note name

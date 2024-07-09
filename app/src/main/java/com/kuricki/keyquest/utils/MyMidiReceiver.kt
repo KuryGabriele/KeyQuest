@@ -1,4 +1,4 @@
-package com.kuricki.keyquest.midiStuff
+package com.kuricki.keyquest.utils
 
 import android.media.midi.MidiReceiver
 
