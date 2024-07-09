@@ -26,9 +26,15 @@ class LevelSelectScreenModel(val loginSession: UserSession, private val reposito
 
     fun getLevels(){
         screenModelScope.launch {
+            //update ui
+            _uiState.update { currentState ->
+                currentState.copy(
+                    getLevels = false,
+                )
+            }
             repository.getAllLevels().collect {
                 //if there are levels in db, use them
-                if(it.isNotEmpty()){
+                if(it.isNotEmpty() && !uiState.value.getLevelsFromApi){
                     println("Got levels from db")
                     setLevels(it.toMutableList())
                 } else {
@@ -48,14 +54,13 @@ class LevelSelectScreenModel(val loginSession: UserSession, private val reposito
                     } catch (e: Exception){
                         println(e)
                     }
-                }
-            }
 
-            //update ui
-            _uiState.update { currentState ->
-                currentState.copy(
-                    getLevels = false
-                )
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            getLevelsFromApi = false
+                        )
+                    }
+                }
             }
         }
     }
