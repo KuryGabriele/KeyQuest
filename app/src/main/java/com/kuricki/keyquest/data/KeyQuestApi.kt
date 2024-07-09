@@ -24,6 +24,9 @@ interface KeyQuestApiService {
     @GET("levels") //Get available levels from api, requires token
     suspend fun getLevels(@Header("Authorization") authorization: String): MutableList<GameLevel>
 
+    @POST("levels/score") //Submit level score to api, requires token")
+    suspend fun submitLevelScore(@Header("Authorization") authorization: String, @Body b: JsonObject): JsonObject
+
     @POST("auth/login") //Get login session from api
     suspend fun getLoginSession(@Body b: JsonObject): UserSession
 
