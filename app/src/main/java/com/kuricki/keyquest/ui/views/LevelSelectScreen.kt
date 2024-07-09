@@ -64,7 +64,7 @@ data class LevelSelectScreen(val loginSession: UserSession): Screen {
         //get the repository
         val r = (context.applicationContext as KeyquestApplication).container.gameLevelRepository
         //get the view model
-        val levelSelectViewModel = rememberScreenModel { LevelSelectScreenModel(loginSession, r) }
+        val levelSelectViewModel = rememberScreenModel { LevelSelectScreenModel(loginSession, r, context) }
         //get the ui state
         val lsUiState by levelSelectViewModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow

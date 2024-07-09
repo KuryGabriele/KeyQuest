@@ -134,6 +134,16 @@ data class LevelSummaryScreen(val loginSession: UserSession, private val midiMan
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.primary
                     )
+                    if(summaryScreenModel.offline.intValue == 1) {
+                        //offline mode warning
+                        Text(
+                            modifier = Modifier
+                                .padding(start = 16.dp,  bottom = 16.dp),
+                            text = stringResource(R.string.offlineModeWarning),
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
                 Column(
                     modifier = Modifier

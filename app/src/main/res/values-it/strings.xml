@@ -22,4 +22,5 @@
     <string name="errors">Errori:</string>
     <string name="retry">Ritenta</string>
     <string name="continueGame">Continua</string>
+    <string name="offlineModeWarning">Sembra che tua sia offline, il progresso verrà salvato una volta tornato online!</string>
 </resources>

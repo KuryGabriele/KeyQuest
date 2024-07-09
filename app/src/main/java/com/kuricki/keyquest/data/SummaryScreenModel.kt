@@ -15,9 +15,17 @@ import kotlinx.serialization.json.JsonObject
 
 class SummaryScreenModel(private val loginSession: UserSession, private val context: Context, private val lvl: GameLevel, private val score: Int, private val repository: GameLevelRepository): ScreenModel {
     private val _bestScore = mutableIntStateOf(lvl.bestScore)
+    private val _offline = mutableIntStateOf(0)
     val bestScore = _bestScore.asIntState()
+    val offline = _offline.asIntState()
 
     init {
+        //show warning message if offline
+        if(!isOnline(context)) {
+            _offline.intValue = 1
+        } else {
+            _offline.intValue = 0
+        }
         screenModelScope.launch {
             repository.getLevelById(lvl.id).collect {
                 if (it == null || it.bestScore < _bestScore.intValue) {
