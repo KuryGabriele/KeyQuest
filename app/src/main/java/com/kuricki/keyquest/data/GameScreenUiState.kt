@@ -21,4 +21,6 @@ data class GameScreenUiState(
     val wrongNotePressed: Boolean = false,
     val levelFinished:Boolean = false,
     val errors: Int = 0,
+    val lowestNote: String = "",
+    val highestNote: String = ""
 )
