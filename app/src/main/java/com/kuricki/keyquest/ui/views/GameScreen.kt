@@ -62,7 +62,7 @@ data class GameScreen(val loginSession: UserSession, val midiManager: MidiManage
         if(gUiState.levelFinished) {
             //if level finished, go to level summary screen
             val navigator = LocalNavigator.currentOrThrow
-            navigator.replaceAll(LevelSummaryScreen(loginSession, gUiState.currentLevel, gUiState.currentScore, gUiState.errors))
+            navigator.replaceAll(LevelSummaryScreen(loginSession, midiManager, gUiState.currentLevel, gUiState.currentScore, gUiState.errors))
         }
 
         DisposableEffect(Unit) {

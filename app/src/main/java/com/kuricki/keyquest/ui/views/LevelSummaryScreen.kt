@@ -2,6 +2,7 @@ package com.kuricki.keyquest.ui.views
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.media.midi.MidiManager
 import android.os.Build
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -41,7 +42,7 @@ import com.kuricki.keyquest.data.SummaryScreenModel
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.db.UserSession
 
-data class LevelSummaryScreen(val loginSession: UserSession, val lvl: GameLevel, val score: Int, val error: Int): Screen {
+data class LevelSummaryScreen(val loginSession: UserSession, private val midiManager: MidiManager, val lvl: GameLevel, val score: Int, val error: Int): Screen {
     override val key = uniqueScreenKey
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -146,7 +147,10 @@ data class LevelSummaryScreen(val loginSession: UserSession, val lvl: GameLevel,
                         modifier = Modifier
                             .width(250.dp)
                             .height(50.dp),
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            // navigate to level select screen
+                            navigator.replaceAll(GameScreen(loginSession, midiManager, lvl))
+                        },
                     ) {
                         Text(
                             text = stringResource(R.string.retry),
