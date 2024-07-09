@@ -149,7 +149,7 @@ data class LevelSummaryScreen(val loginSession: UserSession, private val midiMan
                             .height(50.dp),
                         onClick = {
                             // navigate to level select screen
-                            navigator.replaceAll(GameScreen(loginSession, midiManager, lvl))
+                            navigator.replace(GameScreen(loginSession, midiManager, lvl))
                         },
                     ) {
                         Text(
