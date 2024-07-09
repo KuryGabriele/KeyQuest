@@ -1,4 +1,4 @@
-# Progetto d'esame per Laboratorio di programmazione per sistemi mobili e tablet
+# This is an app made for the Mobile lab course
 
-## App per imparare il pianoforte
-L'obiettivo è quello di fornire lezioni introduttive al pianoforte con l'ausilio del protocollo MIDI per verificare l'input dell'utente sullo strumento. L'app è scritta in Kotlin con Jetpack Compose per il front-end.
+## App to learn piano
+The app focuses on teaching basic piano lessons for beginners. It uses the MIDI protocol to verify that the user is playing correctly. The app is made in Kotlin using Jetpack Compose.
