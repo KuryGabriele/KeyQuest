@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 
 fun pitchToHeight(pitch: String, options: MusicSheetOptions): Float {
     //remove alterations
-    val pitch = pitch.replace("♯", "").replace("♭", "")
+    val pitch = pitch.replace("♯", "").replace("♭", "").replace("#", "")
 
     val note = pitch[0] //get che note
     val octave = pitch[1].toString().toInt() //get the octave
