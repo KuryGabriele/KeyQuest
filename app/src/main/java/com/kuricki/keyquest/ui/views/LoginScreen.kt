@@ -63,7 +63,7 @@ class LoginScreen: Screen {
 
         //Check if there is a session saved
         if(loginUiState.checkSession) {
-            loginScreenModel.checkSession { session ->
+            loginScreenModel.checkSession(context) { session ->
                 //Replace the login screen
                 session?.let {
                     println(session)

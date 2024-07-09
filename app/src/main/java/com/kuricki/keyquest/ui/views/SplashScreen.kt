@@ -44,7 +44,7 @@ class SplashScreen: Screen {
 
         //Check if there is a session saved
         if(loginUiState.checkSession) {
-            loginScreenModel.checkSession { session ->
+            loginScreenModel.checkSession(context) { session ->
                 session?.let {
                     //If session is not null, replace the login screen
                     navigator.replaceAll(LevelSelectScreen(loginSession = session))

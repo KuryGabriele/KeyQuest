@@ -1,9 +1,11 @@
 package com.kuricki.keyquest.data
 
+import android.content.Context
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.kuricki.keyquest.db.UserSession
 import com.kuricki.keyquest.db.UserSessionRepository
+import com.kuricki.keyquest.utils.isOnline
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -168,7 +170,7 @@ class LoginScreenModel(private val repository: UserSessionRepository): ScreenMod
         }
     }
 
-    fun checkSession(a: (UserSession?) -> Unit) {
+    fun checkSession(context: Context, a: (UserSession?) -> Unit) {
         screenModelScope.launch {
             //update checkSession
             _uiState.update { currentState ->
@@ -180,20 +182,26 @@ class LoginScreenModel(private val repository: UserSessionRepository): ScreenMod
             val s = repository.getSession().collect {
                 if (it != null) {
                     //if there is a session, check if it is still valid
-                    try {
-                        val response = KeyQuestApi.retrofitService.validateSession(it.token)
-                        KeyQuestApi.setToken(it.token)
-                        a(response)
-                        //update checkSession
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                checkSession = true
-                            )
+                    //if device is online
+                    if(isOnline(context)) {
+                        try {
+                            val response = KeyQuestApi.retrofitService.validateSession(it.token)
+                            KeyQuestApi.setToken(it.token)
+                            a(response)
+                            //update checkSession
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    checkSession = true
+                                )
+                            }
+                        } catch (e: retrofit2.HttpException) {
+                            //if the session is invalid, delete it
+                            repository.delete(it)
+                            a(null)
                         }
-                    } catch (e: retrofit2.HttpException) {
-                        //if the session is invalid, delete it
-                        repository.delete(it)
-                        a(null)
+                    } else {
+                        //if device is offline
+                        a(it)
                     }
                 } else {
                     //if there is no session

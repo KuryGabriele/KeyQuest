@@ -58,7 +58,7 @@ class RegisterScreen: Screen {
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         //Check if there is a session saved
         if(loginUiState.checkSession) {
-            loginScreenModel.checkSession { session ->
+            loginScreenModel.checkSession(context) { session ->
                 //Replace the login screen
                 session?.let {
                     println(session)
