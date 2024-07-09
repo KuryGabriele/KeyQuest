@@ -128,13 +128,12 @@ data class GameScreen(val loginSession: UserSession, val midiManager: MidiManage
                 //show the music sheet
                 MusicSheet(notes = gUiState.keysToPress.take(20).toMutableList())
             }
-            //Piano roll
 
             PianoRoll(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally),
-                startNote = "C4",
-                endNote = "F5",
+                startNote = gUiState.lowestNote,
+                endNote = gUiState.highestNote,
                 pressedNotes = gUiState.currPressedKeys,
                 // highlight notes in the piano roll
                 highlightedNotes = if(gUiState.keysToPress.isEmpty())  mutableSetOf() else mutableSetOf(gUiState.keysToPress[0])
