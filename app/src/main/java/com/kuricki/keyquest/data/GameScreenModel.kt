@@ -16,7 +16,7 @@ import kotlin.math.ceil
 import kotlin.math.min
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-class GameScreenScreenModel(private val midiManager: MidiManager, private val lvl: GameLevel): ScreenModel {
+class GameScreenModel(private val midiManager: MidiManager, private val lvl: GameLevel): ScreenModel {
     private val _uiState = MutableStateFlow(GameScreenUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -90,8 +90,10 @@ class GameScreenScreenModel(private val midiManager: MidiManager, private val lv
         }
     }
 
+    /**
+     * Get all midi devices
+     */
     fun getDevices(): MutableSet<MidiDeviceInfo> {
-        //fetches all midi devices from the system
         val devices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM) //midi 1.0
         devices.addAll(midiManager.getDevicesForTransport(MidiManager.TRANSPORT_UNIVERSAL_MIDI_PACKETS)) //midi 2.0
         return devices

@@ -39,7 +39,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.kuricki.keyquest.R
-import com.kuricki.keyquest.data.GameScreenScreenModel
+import com.kuricki.keyquest.data.GameScreenModel
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.db.UserSession
 import com.kuricki.keyquest.ui.components.MusicSheet
@@ -52,9 +52,9 @@ data class GameScreen(val loginSession: UserSession, @Transient val midiManager:
     override fun Content() {
         val modifier = Modifier
         //get the view model
-        val gameScreenScreenModel = rememberScreenModel { GameScreenScreenModel(midiManager, lvl) }
+        val gameScreenModel = rememberScreenModel { GameScreenModel(midiManager, lvl) }
         //get the ui state
-        val gUiState by gameScreenScreenModel.uiState.collectAsState()
+        val gUiState by gameScreenModel.uiState.collectAsState()
         val context = LocalContext.current
         //lock the screen orientation to landscape
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
@@ -99,7 +99,7 @@ data class GameScreen(val loginSession: UserSession, @Transient val midiManager:
                 // Top bar buttons and info
                 //Settings button
                 RoundedButtonWithIcon(
-                    onClick = { gameScreenScreenModel.midiSelectionOpen(true) },
+                    onClick = { gameScreenModel.midiSelectionOpen(true) },
                     icon = Icons.Default.Settings,
                     contentDescription = "Midi settings",
                 )
@@ -141,7 +141,7 @@ data class GameScreen(val loginSession: UserSession, @Transient val midiManager:
         }
         if(gUiState.midiSelectionOpen) {
             //if midi selection is open, show it
-            MidiDeviceSelection(gssm = gameScreenScreenModel)
+            MidiDeviceSelection(gssm = gameScreenModel)
         }
 
         if(gUiState.newDeviceConnected) {
@@ -149,7 +149,7 @@ data class GameScreen(val loginSession: UserSession, @Transient val midiManager:
             val newDevice = gUiState.currMidiDevice!!.properties.getString("product", "Null")
             Toast.makeText(LocalContext.current, "Connected to: $newDevice", Toast.LENGTH_SHORT).show()
             //reset the flag
-            gameScreenScreenModel.deviceConnectedNotificationShown()
+            gameScreenModel.deviceConnectedNotificationShown()
         }
     }
 }
@@ -161,7 +161,7 @@ data class GameScreen(val loginSession: UserSession, @Transient val midiManager:
 @Composable
 fun MidiDeviceSelection(
     modifier: Modifier = Modifier,
-    gssm: GameScreenScreenModel
+    gssm: GameScreenModel
 ) {
     val gUiState by gssm.uiState.collectAsState()
     val midiDevices = gssm.getDevices() //get the devices from the view model

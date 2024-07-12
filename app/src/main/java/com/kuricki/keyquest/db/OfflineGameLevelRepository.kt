@@ -3,13 +3,9 @@ package com.kuricki.keyquest.db
 import kotlinx.coroutines.flow.Flow
 
 class OfflineGameLevelRepository(private val glDao: GameLevelDao): GameLevelRepository {
-    override suspend fun getAllLevels(): Flow<List<GameLevel>> {
-        return glDao.getAll()
-    }
+    override suspend fun getAllLevels(): Flow<List<GameLevel>> = glDao.getAll()
 
-    override suspend fun getLevelById(id: Int): Flow<GameLevel?> {
-        return glDao.getById(id)
-    }
+    override suspend fun getLevelById(id: Int): Flow<GameLevel?> = glDao.getById(id)
 
     override suspend fun saveLevel(level: GameLevel) = glDao.insert(level)
 
