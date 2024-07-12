@@ -2,9 +2,16 @@ package com.kuricki.keyquest.utils
 
 import android.media.midi.MidiReceiver
 
+/**
+ * Class for receiving midi signals, calls a callback function when a key is pressed or released
+ */
 class MyMidiReceiver:MidiReceiver() {
     private var keysPressedCurrently = mutableSetOf<String>()
-    var cb: (Set<String>) -> Unit = {}
+    var cb: (Set<String>) -> Unit = {} //callback function
+
+    /**
+     * Called when a midi signal is received
+     */
     override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
         // Get the midi data, its a byte array, I convert it to Int for easier handling
         val receivedData = data.copyOfRange(offset, offset + count)
@@ -32,6 +39,7 @@ class MyMidiReceiver:MidiReceiver() {
                 }
             }
 
+            //increase by three because each event has 3 bytes
             i += 3
         }
 
