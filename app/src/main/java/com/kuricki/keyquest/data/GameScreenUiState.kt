@@ -4,6 +4,7 @@ import android.media.midi.MidiDeviceInfo
 import android.media.midi.MidiOutputPort
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.utils.MyMidiReceiver
+import com.kuricki.keyquest.utils.MyMidiSender
 
 data class GameScreenUiState(
     val userName: String = "Kury", //user nickname
@@ -11,6 +12,7 @@ data class GameScreenUiState(
     val currMidiDevice: MidiDeviceInfo? = null, //currently opened midi device
     val midiPort: MidiOutputPort? = null, //currently open midi port
     val mmr: MyMidiReceiver = MyMidiReceiver(), //midi receiver and listener
+    val mms: MyMidiSender = MyMidiSender(), //midi sender
     val currPressedKeys: MutableSet<String> = mutableSetOf(), //pressed keys
     val midiSelectionOpen: Boolean = false, //midi device selection dialog open
     val newDeviceConnected: Boolean = false, //true if new midi device connected

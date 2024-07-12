@@ -7,11 +7,15 @@ import androidx.annotation.RequiresApi
 import cafe.adriel.voyager.core.model.ScreenModel
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.utils.MyMidiReceiver
+import com.kuricki.keyquest.utils.MyMidiSender
 import com.kuricki.keyquest.utils.midiToNote
 import com.kuricki.keyquest.utils.noteToMidi
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlin.math.ceil
 import kotlin.math.min
 
@@ -51,6 +55,20 @@ class GameScreenModel(private val midiManager: MidiManager, private val lvl: Gam
                 highestNote = midiToNote(highestNote)
             )
         }
+
+        Thread.sleep(1000)
+        playNote(uiState.value.keysToPress[0])
+    }
+
+    override fun onDispose() {
+        super.onDispose()
+
+        //stop all notes if there are any
+        stopAllNotes()
+
+        //close midi ports
+        _uiState.value.midiPort?.close()
+        _uiState.value.mms.outPort?.close()
     }
 
     /**
@@ -68,8 +86,16 @@ class GameScreenModel(private val midiManager: MidiManager, private val lvl: Gam
             //create midi listener for new device
             val listener = MidiManager.OnDeviceOpenedListener {
                 println("Device opened")
+                //close old ports if open
+                _uiState.value.midiPort?.close()
+                _uiState.value.mms.outPort?.close()
+
                 val newPort = it.openOutputPort(0)
+                val newOutPort = it.openInputPort(0)
+
                 val newMr = MyMidiReceiver()
+                val newMs = MyMidiSender(newOutPort)
+
                 newMr.cb = { newSet ->
                     updateCurrPressedKey(newSet.toMutableSet())
                 }
@@ -78,6 +104,7 @@ class GameScreenModel(private val midiManager: MidiManager, private val lvl: Gam
                 _uiState.update { currState ->
                     currState.copy(
                         mmr = newMr,
+                        mms = newMs,
                         midiPort = newPort,
                         currMidiDevice = device,
                         newDeviceConnected = true
@@ -121,6 +148,9 @@ class GameScreenModel(private val midiManager: MidiManager, private val lvl: Gam
         } else {
             if(_uiState.value.waitForKeyOff) {
                 //key off
+
+                stopAllNotes()
+
                 _uiState.update {
                     it.copy(
                         notesDone = it.notesDone + 1
@@ -169,6 +199,7 @@ class GameScreenModel(private val midiManager: MidiManager, private val lvl: Gam
                     }
                 } else {
                     //reset waitForKeyOff and update ui
+                    playNote(newNotes[0])
                     _uiState.update {
                         it.copy(
                             waitForKeyOff = false,
@@ -210,5 +241,17 @@ class GameScreenModel(private val midiManager: MidiManager, private val lvl: Gam
                 newDeviceConnected = false
             )
         }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun playNote(note: String) {
+        //Plays note without blocking
+        GlobalScope.launch {
+            _uiState.value.mms.send(note, 1000)
+        }
+    }
+
+    fun stopAllNotes() {
+        _uiState.value.mms.stopAll()
     }
 }
