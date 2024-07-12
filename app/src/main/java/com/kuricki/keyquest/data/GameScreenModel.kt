@@ -140,6 +140,7 @@ class GameScreenModel(private val midiManager: MidiManager, private val lvl: Gam
 
         if(uiState.value.keysToPress.isNotEmpty() && newKeys.contains(uiState.value.keysToPress[0])) {
             //correct key pressed
+            stopAllNotes()
             _uiState.update {
                 it.copy(
                     waitForKeyOff = true
