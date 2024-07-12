@@ -46,7 +46,7 @@ import com.kuricki.keyquest.ui.components.MusicSheet
 import com.kuricki.keyquest.ui.components.PianoRoll
 import com.kuricki.keyquest.ui.components.RoundedButtonWithIcon
 
-data class GameScreen(val loginSession: UserSession, val midiManager: MidiManager, val lvl: GameLevel): Screen {
+data class GameScreen(val loginSession: UserSession, @Transient val midiManager: MidiManager, val lvl: GameLevel): Screen {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @Composable
     override fun Content() {

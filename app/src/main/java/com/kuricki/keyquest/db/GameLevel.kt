@@ -12,4 +12,4 @@ data class GameLevel(
     val difficulty: Int,
     val bestScore: Int,
     val notes: String
-)
+): java.io.Serializable

@@ -42,7 +42,7 @@ import com.kuricki.keyquest.data.SummaryScreenModel
 import com.kuricki.keyquest.db.GameLevel
 import com.kuricki.keyquest.db.UserSession
 
-data class LevelSummaryScreen(val loginSession: UserSession, private val midiManager: MidiManager, val lvl: GameLevel, val score: Int, val error: Int): Screen {
+data class LevelSummaryScreen(val loginSession: UserSession, @Transient private val midiManager: MidiManager, val lvl: GameLevel, val score: Int, val error: Int): Screen {
     override val key = uniqueScreenKey
 
     @RequiresApi(Build.VERSION_CODES.R)
